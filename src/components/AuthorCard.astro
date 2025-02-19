@@ -26,6 +26,7 @@ const {
 const socialLinks: SocialLink[] = [
   website && { href: website, label: 'Website' },
   github && { href: github, label: 'GitHub' },
+  twitter && { href: twitter, label: 'Twitter' },
   linkedin && { href: linkedin, label: 'LinkedIn' },
   mail && { href: mail, label: 'Email' },
 ].filter(Boolean) as SocialLink[]
@@ -36,7 +37,7 @@ const socialLinks: SocialLink[] = [
 >
   <div class="flex flex-wrap gap-4">
     <Link
-      href={`/authors/${author.slug}`}
+      href={`/authors/${author.id}`}
       class={cn('block', linkDisabled && 'pointer-events-none')}
     >
       <AvatarComponent

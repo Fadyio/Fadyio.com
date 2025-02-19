@@ -41,8 +41,8 @@ export default defineConfig({
         rehypePrettyCode,
         {
           theme: {
-            light: 'github-light-high-contrast',
-            dark: 'github-dark-high-contrast',
+            light: 'catppuccin-latte',
+            dark: 'catppuccin-mocha',
           },
           transformers: [
             transformerNotationDiff(),

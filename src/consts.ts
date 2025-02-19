@@ -13,7 +13,7 @@ export type Link = {
 }
 
 export const SITE: Site = {
-  TITLE: "Fady Nagh's Blog",
+  TITLE: "Fadyio.com",
   DESCRIPTION:
     'Dive into DevOps with Fady Nagh, Discover in-depth insights on AWS, Kubernetes, automation, and cloud-native technologies with practical guides.',
   EMAIL: 'Fady@Fadyio.com',
