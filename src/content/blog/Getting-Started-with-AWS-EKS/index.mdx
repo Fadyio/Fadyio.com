@@ -20,7 +20,8 @@ In this article, we’ll walk you through how to set up and run a Kubernetes dep
 > 2. [Kubectl](https://kubernetes.io/docs/tasks/tools/) used for communicating with the cluster API server.
 > 3. AWS-IAM-Authenticator – to allow IAM authentication with the Kubernetes cluster.
 
-> [!danger] EKS is not included in [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier) For every cluster you create on EKS, you pay $0.10/hour. 
+> [!danger] 
+EKS is not included in [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier) For every cluster you create on EKS, you pay $0.10/hour. 
 
 
 #### Step 1:Creating an EKS role
@@ -48,7 +49,8 @@ The IAM role is created.
 
 ![screen5](images/screen5.webp)
 
-> [!note] Be sure to record the Role ARN, as you'll need it later when creating your Kubernetes cluster, And Amazon EKS now also offers [service account IAM roles](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html), eliminating previous iterations’ requirement for extended worker node permissions.
+> [!note] 
+Be sure to record the Role ARN, as you'll need it later when creating your Kubernetes cluster, And Amazon EKS now also offers [service account IAM roles](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html), eliminating previous iterations’ requirement for extended worker node permissions.
 
 #### Step 2: Creating a VPC for EKS
 Now, we’re going to create a separate VPC that protects the communication between worker nodes and the AWS Kubernetes API server for our EKS cluster. To do this, we’re going to use a CloudFormation template that contains all the necessary EKS-specific ingredients for setting up the VPC.
@@ -83,7 +85,7 @@ we will use the AWS CLI to create the Kubernetes cluster. To do this, use the fo
 ```bash title="eks-cluster.sh" caption="Creating the EKS cluster"
 aws eks --region <region> create-cluster --name <clusterName> --role-arn <EKS-role-ARN> --resources-vpc-config subnetIds=<subnet-id-1>,<subnet-id-2>,<subnet-id-3>,securityGroupIds=<security-group-id>
 ```
-> [!note] Be sure to replace the bracketed parameters as follows:
+> [!note] 
 Be sure to replace the bracketed parameters as follows:
 >- Region — the region in which you wish to deploy the cluster.
 >- ClusterName — a name for the EKS cluster you want to create.

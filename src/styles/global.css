@@ -1,4 +1,4 @@
-@import 'rehype-callouts/theme/github';
+@import 'rehype-callouts/theme/obsidian';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,0 +1,18 @@
+{
+  "newblog": {
+    "prefix": "newblog",
+    "body": [
+      "---",
+      "title: \"$1\"",
+      "description: \"$2\"",
+      "date: \"$3\"",
+      "tags: [\"$4\"]",
+      "image: \"./images/\"",
+      "author: \"Fady\"",
+      "---",
+      "",
+      "$0"
+    ],
+    "description": "Creates a new blog post template"
+  }
+}
