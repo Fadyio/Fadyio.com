@@ -1,8 +1,34 @@
-# My Personal Website
+# My Personal Website and Blog
 
 <div align="center">
   <img alt="Logo" src="https://github.com/Fadyio/Fadyio.com/blob/main/public/static/logo.svg" height="200"/>
 </div>
+
+<p align="center">
+  <a href="https://github.com/Fadyio/Fadyio.com/stargazers">
+    <img
+      alt="Stargazers"
+      src="https://img.shields.io/github/stars/Fadyio/Fadyio.com?style=for-the-badge&logo=starship&color=c678dd&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+  <a href="https://github.com/Fadyio/Fadyio.com/issues">
+    <img
+      alt="Issues"
+      src="https://img.shields.io/github/issues/Fadyio/Fadyio.com?style=for-the-badge&logo=gitbook&color=f0c062&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+  <a href="https://github.com/Fadyio/Fadyio.com/contributors">
+    <img
+      alt="Contributors"
+      src="https://img.shields.io/github/contributors/Fadyio/Fadyio.com?style=for-the-badge&logo=opensourceinitiative&color=abcf84&logoColor=d9e0ee&labelColor=282a36"
+    />
+  </a>
+    <a href="https://github.com/Fadyio/Fadyio.com">
+    <img src="https://img.shields.io/github/repo-size/Fadyio/Fadyio.com?color=%23DDB6F2&label=SIZE&logo=codesandbox&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41" alt="Repo Size">
+  </a>
+
+  <img src="https://img.shields.io/github/last-commit/Fadyio/Fadyio.com?&style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41" alt="Last Commit">
+</p>
 
 This repository contains the source code for my personal website, hosted on Cloudflare Pages.  The site is built using Astro, a fast and flexible static site generator.
 
