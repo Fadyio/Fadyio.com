@@ -29,7 +29,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@rehype-pretty/transformers": "^0.13.2",
     "@shikijs/transformers": "^1.24.4",
-    "@types/react": "^18.3.20",
+    "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.6",
     "astro": "^5.9.3",
     "astro-icon": "^1.1.4",
