@@ -31,7 +31,7 @@
     "@shikijs/transformers": "^1.24.4",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.6",
-    "astro": "^5.13.2",
+    "astro": "^5.13.4",
     "astro-icon": "^1.1.4",
     "bootstrap-icons": "^1.11.3",
     "class-variance-authority": "^0.7.1",
