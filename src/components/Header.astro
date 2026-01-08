@@ -9,7 +9,8 @@ import logo from '../../public/static/logo.webp'
 ---
 
 <header
-  class="sticky top-0 z-10 bg-background/50 backdrop-blur-md"
+  id="main-header"
+  class="sticky top-0 z-10 bg-background/50 backdrop-blur-md transition-all duration-300"
   transition:persist
 >
   <Container>
@@ -40,3 +41,43 @@ import logo from '../../public/static/logo.webp'
     </div>
   </Container>
 </header>
+
+<script>
+  function initHeaderScroll() {
+    const header = document.getElementById('main-header');
+    if (!header) return;
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateHeader = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        // Scrolling down - hide header
+        header.style.transform = 'translateY(-100%)';
+        header.style.opacity = '0';
+      } else {
+        // Scrolling up - show header
+        header.style.transform = 'translateY(0)';
+        header.style.opacity = '1';
+      }
+      
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    });
+  }
+
+  // Run on initial load
+  initHeaderScroll();
+
+  // Re-run after Astro page transitions
+  document.addEventListener('astro:after-swap', initHeaderScroll);
+</script>
