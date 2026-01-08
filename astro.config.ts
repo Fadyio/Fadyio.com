@@ -12,6 +12,8 @@ import sectionize from '@hbsnow/rehype-sectionize'
 import icon from 'astro-icon'
 import expressiveCode from 'astro-expressive-code'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
+import rehypeExternalLinks from 'rehype-external-links'
+import remarkToc from 'remark-toc'
 
 export default defineConfig({
   site: 'https://fadyio.com',
@@ -57,8 +59,15 @@ export default defineConfig({
       rehypeKatex,
       rehypeCallouts,
       sectionize,
+      [
+        rehypeExternalLinks,
+        {
+          target: '_blank',
+          rel: ['nofollow', 'noopener', 'noreferrer'],
+        },
+      ],
     ],
-    remarkPlugins: [remarkMath, remarkEmoji],
+    remarkPlugins: [remarkMath, remarkEmoji, remarkToc],
   },
   server: {
     port: 1234,

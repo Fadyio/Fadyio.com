@@ -20,8 +20,14 @@ const blog = defineCollection({
       date: z.coerce.date(),
       image: image().optional(),
       tags: z.array(z.string()).optional(),
+      author: z.string().optional(),
       authors: z.array(z.string()).optional(),
       draft: z.boolean().optional(),
+    }).transform((data) => {
+      if (data.author && !data.authors) {
+        data.authors = [data.author]
+      }
+      return data
     }),
 })
 
