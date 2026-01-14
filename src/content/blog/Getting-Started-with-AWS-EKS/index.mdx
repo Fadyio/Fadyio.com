@@ -2,10 +2,12 @@
 title: "Getting Started with Amazon EKS"
 date: "2022-10-11"
 tags: ["AWS", "EKS"]
-author: "Fady"
+author: "fady"
 description: "Setup Kubernetes cluster and deploy a sample application in AWS EKS."
 image: './images/EKS-container.webp'
 ---
+import Callout from '@/components/Callout.astro'
+
 There's no denying it — Kubernetes has become the de-facto industry standard for container orchestration.
 
 But Setting up and maintaining Kubernetes clusters to run containerized workloads can be a challenge, especially if you are running it on the cloud. You need to take care of networking, setting up the master node, security and continuous updates and patches.
@@ -20,8 +22,9 @@ In this article, we’ll walk you through how to set up and run a Kubernetes dep
 > 2. [Kubectl](https://kubernetes.io/docs/tasks/tools/) used for communicating with the cluster API server.
 > 3. AWS-IAM-Authenticator – to allow IAM authentication with the Kubernetes cluster.
 
-> [!danger] 
+<Callout variant="danger">
 EKS is not included in [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier) For every cluster you create on EKS, you pay $0.10/hour. 
+</Callout> 
 
 
 #### Step 1:Creating an EKS role
@@ -49,8 +52,9 @@ The IAM role is created.
 
 ![screen5](images/screen5.webp)
 
-> [!note] 
+<Callout variant="note">
 Be sure to record the Role ARN, as you'll need it later when creating your Kubernetes cluster, And Amazon EKS now also offers [service account IAM roles](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html), eliminating previous iterations’ requirement for extended worker node permissions.
+</Callout>
 
 #### Step 2: Creating a VPC for EKS
 Now, we’re going to create a separate VPC that protects the communication between worker nodes and the AWS Kubernetes API server for our EKS cluster. To do this, we’re going to use a CloudFormation template that contains all the necessary EKS-specific ingredients for setting up the VPC.
@@ -85,13 +89,14 @@ we will use the AWS CLI to create the Kubernetes cluster. To do this, use the fo
 ```bash title="eks-cluster.sh" caption="Creating the EKS cluster"
 aws eks --region <region> create-cluster --name <clusterName> --role-arn <EKS-role-ARN> --resources-vpc-config subnetIds=<subnet-id-1>,<subnet-id-2>,<subnet-id-3>,securityGroupIds=<security-group-id>
 ```
-> [!note] 
+<Callout variant="note">
 Be sure to replace the bracketed parameters as follows:
->- Region — the region in which you wish to deploy the cluster.
->- ClusterName — a name for the EKS cluster you want to create.
->- EKS-role-ARN — the ARN of the IAM role you created in the first step.
->- SubnetIds — SubnetIds values from the AWS CloudFormation output that you generated in the previous step.
->- Security-group-id — the SecurityGroups value from the AWS CloudFormation output that you generated in the previous step.
+- Region — the region in which you wish to deploy the cluster.
+- ClusterName — a name for the EKS cluster you want to create.
+- EKS-role-ARN — the ARN of the IAM role you created in the first step.
+- SubnetIds — SubnetIds values from the AWS CloudFormation output that you generated in the previous step.
+- Security-group-id — the SecurityGroups value from the AWS CloudFormation output that you generated in the previous step.
+</Callout>
 
 This is an example of what this command will look like:
 
@@ -183,19 +188,20 @@ https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-01-09/amazon-e
 ```
 ![screen14](images/screen14.webp)
 
-> [!note] Click next, name your cloudformation stack, and in the eks cluster section enter the following
->- ClusterName – the name of your Kubernetes cluster (e.g. MyEKSCluster)
->- ClusterControlPlaneSecurityGroup – the same security group you used for creating the cluster in previous step.
->- NodeGroupName – a name for your node group.
->- NodeAutoScalingGroupMinSize – leave as-is. The minimum number of nodes that your worker node Auto Scaling group can scale to.
->- NodeAutoScalingGroupDesiredCapacity – leave as-is. The desired number of nodes to scale to when your stack is created.
->- NodeAutoScalingGroupMaxSize – leave as-is. The maximum number of nodes that your worker node Auto Scaling group can scale out to.
->- NodeInstanceType – leave as-is. The instance type used for the worker nodes.
->- NodeImageId – the Amazon EKS worker node AMI ID for the region you’re using. For us-east-1, for example: ami-0b5eea76982371e91
->- KeyName – the name of an Amazon EC2 SSH key pair for connecting with the worker nodes once they launch.
->- BootstrapArguments – leave empty. This field can be used to pass optional arguments to the worker nodes bootstrap script.
->- VpcId – enter the ID of the VPC you created in Step 2 above.
->- Subnets – select the three subnets you created in Step 2 above.
+<Callout variant="note" title="Click next, name your cloudformation stack, and in the eks cluster section enter the following">
+- ClusterName – the name of your Kubernetes cluster (e.g. MyEKSCluster)
+- ClusterControlPlaneSecurityGroup – the same security group you used for creating the cluster in previous step.
+- NodeGroupName – a name for your node group.
+- NodeAutoScalingGroupMinSize – leave as-is. The minimum number of nodes that your worker node Auto Scaling group can scale to.
+- NodeAutoScalingGroupDesiredCapacity – leave as-is. The desired number of nodes to scale to when your stack is created.
+- NodeAutoScalingGroupMaxSize – leave as-is. The maximum number of nodes that your worker node Auto Scaling group can scale out to.
+- NodeInstanceType – leave as-is. The instance type used for the worker nodes.
+- NodeImageId – the Amazon EKS worker node AMI ID for the region you’re using. For us-east-1, for example: ami-0b5eea76982371e91
+- KeyName – the name of an Amazon EC2 SSH key pair for connecting with the worker nodes once they launch.
+- BootstrapArguments – leave empty. This field can be used to pass optional arguments to the worker nodes bootstrap script.
+- VpcId – enter the ID of the VPC you created in Step 2 above.
+- Subnets – select the three subnets you created in Step 2 above.
+</Callout>
 
 ![screen15](images/screen15.webp)
 

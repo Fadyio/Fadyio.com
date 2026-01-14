@@ -2,10 +2,12 @@
 title: "Managing AWS Credentials in EKS Pods with EKS Pod Identities"
 date: "2024-01-10"
 tags: ["AWS", "EKS"]
-author: "Fady"
+author: "fady"
 description: "EKS Pod Identities Explained: Managing AWS Credentials in Kubernetes Pods."
 image: './images/EKS-Pod-Identities-Explained.webp'
 ---
+import Callout from '@/components/Callout.astro'
+
 In the latest AWS re:Invent, the EKS team introduced a new feature called Pod Identity. This feature makes it easier to manage IAM credentials in Kubernetes applications.
 
 In the past, applications in a pod could use AWS SDK or aws cli to make API requests to AWS services, leveraging AWS Identity and Access Management (IAM) permissions. With EKS Pod Identities, there's now a simpler way to manage credentials for your EKS applications, similar to how Amazon EC2 instance profiles access credentials to interact with other services. Instead of distributing AWS credentials to the containers, you can associate an IAM role with a Kubernetes service account and configure your pods to use this service account.
@@ -20,8 +22,9 @@ In this blog, I will guide you through the process of getting started with EKS P
 
 ![image1](images/image1.webp)
 
-> [!danger] Be careful 
-> As of writing this article EKS is not included in [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier) For every cluster you create on EKS, you pay $0.10/hour.
+<Callout variant="danger" title="Be careful">
+As of writing this article EKS is not included in [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier) For every cluster you create on EKS, you pay $0.10/hour.
+</Callout>
 
 #### Step 1: Install EKS pod Identity Agent addon and create an IAM role
 

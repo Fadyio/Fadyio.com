@@ -2,10 +2,12 @@
 title: "Securely Accessing Private AWS Resources with TailScale"
 date: "2023-11-10"
 tags: ["AWS", "EKS"]
-author: "Fady"
+author: "fady"
 description: "How To Securely Accessing Private AWS Resources from GitHub Actions with TailScale"
 image: './images/tailscale.webp'
 ---
+import Callout from '@/components/Callout.astro'
+
 ## The Problem
 One of the common problems of CI/CD automation is how to handle private resources without exposing these resources directly to the public or relying on complex VPN setups may not be the ideal solution.
 
@@ -149,8 +151,9 @@ First, we will create a security group that will allow connection from the subne
 
 ![images15](images/image15.webp)
 
-> [!note] 
-> In a production environment, it is bad practice to allow all connections from a security group, Only allow access from trusted sources for specific ports and protocols, following the principle of least privilege.
+<Callout variant="note">
+In a production environment, it is bad practice to allow all connections from a security group, Only allow access from trusted sources for specific ports and protocols, following the principle of least privilege.
+</Callout>
 
 I will not cover how to create an RDS database here. I assume you have already created an RDS database, please refer to the [AWS documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateDBInstance.html) if you don't know how to create one.
 
@@ -199,6 +202,7 @@ jobs:
 
 In this blog, we've demonstrated how to create a secure and seamless connection between GitHub Actions workflows and private AWS resources. This approach not only improves the overall security of your CI/CD pipeline, but also ensures that sensitive data and interactions remain within your network, TailScale is easy to use, and has robust encryption mechanisms.
 
-> [!note] 
-> This is not sponsored or endorsed by TailScale, I use the TailScale at work and in my home lab, I am just a happy customer.
-> One more thing, you can host [Tailscale Control Server](https://github.com/juanfont/headscale) yourself if you want, which is a plus.
+<Callout variant="note">
+This is not sponsored or endorsed by TailScale, I use the TailScale at work and in my home lab, I am just a happy customer.
+One more thing, you can host [Tailscale Control Server](https://github.com/juanfont/headscale) yourself if you want, which is a plus.
+</Callout>

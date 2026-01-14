@@ -24,14 +24,15 @@ export const SITE: Site = {
 
 export const NAV_LINKS: Link[] = [
   { href: '/blog', label: 'blog' },
-  { href: '/gpg-key.txt', label: 'PGP Key'},
-  { href: '/about', label: 'about' },
+  { href: '/gpg-key.txt', label: 'PGP Key' },
+  { href: '/authors', label: 'authors' },
 ]
 
 export const SOCIAL_LINKS: Link[] = [
   { href: 'https://github.com/Fadyio', label: 'GitHub' },
   {
-    href: 'Fady@Fadyio.com', label: 'Email' },
+    href: 'Fady@Fadyio.com', label: 'Email'
+  },
   { href: 'http://linkedin.com/in/Fadyio', label: 'LinkedIn' },
   { href: '/rss.xml', label: 'RSS' },
 ]

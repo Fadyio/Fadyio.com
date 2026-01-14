@@ -6,7 +6,6 @@ import tailwind from '@astrojs/tailwind'
 import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkEmoji from 'remark-emoji'
-import rehypeCallouts from 'rehype-callouts'
 import remarkMath from 'remark-math'
 import sectionize from '@hbsnow/rehype-sectionize'
 import icon from 'astro-icon'
@@ -57,7 +56,7 @@ export default defineConfig({
     rehypePlugins: [
       rehypeHeadingIds,
       rehypeKatex,
-      rehypeCallouts,
+
       sectionize,
       [
         rehypeExternalLinks,
