@@ -19,7 +19,7 @@
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/tailwind": "^6.0.2",
-    "@expressive-code/plugin-line-numbers": "^0.41.5",
+    "@expressive-code/plugin-line-numbers": "^0.41.6",
     "@hbsnow/rehype-sectionize": "^1.0.7",
     "@iconify-json/lucide": "^1.2.85",
     "@radix-ui/react-avatar": "^1.1.11",
