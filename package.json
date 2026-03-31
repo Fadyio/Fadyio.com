@@ -1,7 +1,7 @@
 {
   "name": "fadyio",
   "type": "module",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -12,13 +12,12 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/markdown-remark": "^6.3.10",
-    "@astrojs/mdx": "^4.3.13",
-    "@astrojs/react": "^4.4.2",
-    "@astrojs/rss": "^4.0.14",
-    "@astrojs/sitemap": "^3.7.0",
-    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/markdown-remark": "^7.1.0",
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/react": "^5.0.2",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
     "@expressive-code/plugin-line-numbers": "^0.41.6",
     "@hbsnow/rehype-sectionize": "^1.0.7",
     "@iconify-json/lucide": "^1.2.86",
@@ -30,8 +29,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.6",
-    "astro": "^5.16.12",
-    "astro-expressive-code": "^0.41.5",
+    "astro": "^6.1.2",
     "astro-icon": "^1.1.4",
     "bootstrap-icons": "^1.11.3",
     "class-variance-authority": "^0.7.1",
@@ -51,10 +49,18 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
+    "astro-expressive-code": "^0.41.7",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
     "prettier-plugin-tailwindcss": "^0.6.9"
+  },
+  "overrides": {
+    "yaml-language-server": {
+      "yaml": "2.8.3"
+    }
   },
   "prettier": {
     "semi": false,
