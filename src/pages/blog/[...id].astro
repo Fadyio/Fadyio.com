@@ -48,7 +48,7 @@ const nextPost = getNextPost(currentPostId)
 const prevPost = getPrevPost(currentPostId)
 
 const post = Astro.props
-const { Content, headings } = await render(post)
+const { Content } = await render(post)
 
 const authors = await parseAuthors(post.data.authors ?? [])
 ---

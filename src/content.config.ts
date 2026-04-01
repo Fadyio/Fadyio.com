@@ -36,14 +36,14 @@ const authors = defineCollection({
   schema: z.object({
     name: z.string(),
     pronouns: z.string().optional(),
-    avatar: z.string().url(),
+    avatar: z.url(),
     bio: z.string().optional(),
-    mail: z.string().email().optional(),
-    website: z.string().url().optional(),
-    twitter: z.string().url().optional(),
-    github: z.string().url().optional(),
-    linkedin: z.string().url().optional(),
-    discord: z.string().url().optional(),
+    mail: z.email().optional(),
+    website: z.url().optional(),
+    twitter: z.url().optional(),
+    github: z.url().optional(),
+    linkedin: z.url().optional(),
+    discord: z.url().optional(),
   }),
 })
 
@@ -55,7 +55,7 @@ const projects = defineCollection({
       description: z.string(),
       tags: z.array(z.string()),
       image: image(),
-      link: z.string().url(),
+      link: z.url(),
     }),
 })
 
