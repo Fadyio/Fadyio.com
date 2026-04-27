@@ -32,13 +32,6 @@
 
 This repository contains the source code for my personal website, hosted on Cloudflare Pages.  The site is built using Astro, a fast and flexible static site generator.
 
-## Features
-
-* **Blog:**  A collection of my technical articles and thoughts.
-* **About:** Information about me and my work.
-* **Responsive Design:** The website is designed to be responsive and work well on all devices.
-* **SEO Optimized:** The website is optimized for search engines.
-
 ## Tech Stack
 
 * **Astro:** Static site generator
@@ -77,7 +70,7 @@ Contributions are welcome!  Please open an issue or submit a pull request.
 
 ## License
 
-Copyright 2025 Fady Nagh
+Copyright 2026 Fady Nagh
 
 Licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
