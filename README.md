@@ -32,6 +32,8 @@
 
 This repository contains the source code for my personal website, hosted on Cloudflare Pages.  The site is built using Astro, a fast and flexible static site generator.
 
+![pagespeed](public/static/pagespeed.png)
+
 ## Tech Stack
 
 * **Astro:** Static site generator
