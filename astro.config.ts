@@ -16,6 +16,10 @@ import remarkToc from 'remark-toc'
 
 export default defineConfig({
   site: 'https://fadyio.com',
+  trailingSlash: 'never',
+  build: {
+    format: 'file',
+  },
   integrations: [
     sitemap(),
     expressiveCode({
