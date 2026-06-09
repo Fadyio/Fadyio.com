@@ -15,7 +15,7 @@ export type Link = {
 export const SITE: Site = {
   TITLE: "Fady I/O",
   DESCRIPTION:
-    "This is my blog. I use it to write about  DevOps journey with AWS, K8s, Docker, self-hosting, privacy, and cloud-native experiments.",
+    "This is my blog. I use it to write about DevOps journey with AWS, K8s, Docker, self-hosting, privacy, and cloud-native experiments.",
   EMAIL: 'Fady@Fadyio.com',
   NUM_POSTS_ON_HOMEPAGE: 3,
   POSTS_PER_PAGE: 8,
@@ -33,6 +33,6 @@ export const SOCIAL_LINKS: Link[] = [
   {
     href: 'Fady@Fadyio.com', label: 'Email'
   },
-  { href: 'http://linkedin.com/in/Fadyio', label: 'LinkedIn' },
+  { href: 'https://linkedin.com/in/Fadyio', label: 'LinkedIn' },
   { href: '/rss.xml', label: 'RSS' },
 ]

@@ -1,5 +1,4 @@
 ---
-import AvatarComponent from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { parseAuthors } from '@/lib/server-utils'
@@ -17,7 +16,7 @@ const { entry } = Astro.props as {
 }
 
 const formattedDate = formatDate(entry.data.date)
-const readTime = readingTime(entry.body!)
+const readTime = readingTime(entry.body ?? '')
 const authors = await parseAuthors(entry.data.authors ?? [])
 ---
 
@@ -56,12 +55,13 @@ const authors = await parseAuthors(entry.data.authors ?? [])
             <>
               {authors.map((author) => (
                 <div class="flex items-center gap-x-1.5">
-                  <AvatarComponent
-                    client:load
+                  <img
                     src={author.avatar}
                     alt={author.name}
-                    fallback={author.name[0]}
-                    className="size-5 rounded-full"
+                    width="20"
+                    height="20"
+                    class="size-5 rounded-full object-cover"
+                    loading="lazy"
                   />
                   <span>{author.name}</span>
                 </div>
