@@ -4,15 +4,12 @@ import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 
 import { defineConfig } from 'astro/config'
-import rehypeKatex from 'rehype-katex'
 import remarkEmoji from 'remark-emoji'
-import remarkMath from 'remark-math'
 import sectionize from '@hbsnow/rehype-sectionize'
 import icon from 'astro-icon'
 import expressiveCode from 'astro-expressive-code'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import rehypeExternalLinks from 'rehype-external-links'
-import remarkToc from 'remark-toc'
 
 export default defineConfig({
   site: 'https://fadyio.com',
@@ -56,8 +53,6 @@ export default defineConfig({
     syntaxHighlight: false,
     rehypePlugins: [
       rehypeHeadingIds,
-      rehypeKatex,
-
       sectionize,
       [
         rehypeExternalLinks,
@@ -67,7 +62,7 @@ export default defineConfig({
         },
       ],
     ],
-    remarkPlugins: [remarkMath, remarkEmoji, remarkToc],
+    remarkPlugins: [remarkEmoji],
   },
   server: {
     port: 1234,

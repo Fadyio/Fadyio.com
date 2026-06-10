@@ -22,13 +22,13 @@ const { project } = Astro.props
     {
       project.data.image && (
         <div class="max-w-[200px] sm:flex-shrink-0">
-    <Image
-      src={project.data.image}
-      alt={project.data.name}
+          <Image
+            src={project.data.image}
+            alt={project.data.name}
             width={1200}
             height={630}
             class="object-cover"
-    />
+          />
         </div>
       )
     }
@@ -41,15 +41,15 @@ const { project } = Astro.props
       </p>
       {
         project.data.tags && (
-      <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-2">
             {project.data.tags.map((tag: string) => (
-            <Badge variant="secondary" showHash={false}>
-              {tag}
-            </Badge>
+              <Badge variant="secondary" showHash={false}>
+                {tag}
+              </Badge>
             ))}
           </div>
         )
-        }
-      </div>
+      }
+    </div>
   </Link>
 </div>
