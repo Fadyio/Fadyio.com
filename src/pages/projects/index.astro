@@ -1,34 +1,53 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Container from '@/components/Container.astro'
-import ProjectCard from '@/components/ProjectCard.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import MetaPage from "@/components/MetaPage.astro"
+import ProjectCard from "@/components/ProjectCard.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getCollection } from "astro:content"
 
-const projects = await getCollection('projects')
+const projects = (
+  await getCollection("projects", ({ data }) => !data.draft)
+).sort(
+  (a, b) =>
+    (b.data.startDate?.getTime() ?? 0) - (a.data.startDate?.getTime() ?? 0),
+)
+const hasProjects = projects.length > 0
 ---
 
-<Layout title="Projects" description="A collection of my projects and open-source work.">
-  <Container class="flex flex-col gap-y-6">
-    <Breadcrumbs items={[{ label: 'Projects', icon: 'lucide:folder-kanban' }]} />
-
-    <section class="flex flex-col gap-y-4">
-      <h1 class="text-3xl font-semibold">Projects</h1>
-      {
-        projects.length > 0 ? (
-          <ul class="not-prose flex flex-col gap-4">
-            {projects.map((project) => (
-              <li>
-                <ProjectCard project={project} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="text-center text-muted-foreground">
-            No projects yet. Check back soon!
-          </p>
-        )
-      }
-    </section>
-  </Container>
+<Layout>
+  <MetaPage
+    slot="head"
+    title="Projects"
+    description="Selected cloud infrastructure, automation, and open-source projects by Fady Nagh."
+    noindex={!hasProjects}
+  />
+  <h1>Projects</h1>
+  {hasProjects ? (
+    <ul>
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </ul>
+  ) : (
+    <p class="empty-state">
+      Projects will appear here once they are ready to share.
+    </p>
+  )}
 </Layout>
+
+<style>
+  h1 {
+    margin-block-end: var(--space-m);
+    font-size: var(--step-3);
+    line-height: calc(var(--leading-offset) + 1em);
+    font-weight: var(--font-weight-medium);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .empty-state {
+    max-inline-size: var(--measure);
+    color: var(--muted-foreground);
+  }
+</style>

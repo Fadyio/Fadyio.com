@@ -36,14 +36,15 @@ This repository contains the source code for my personal website, hosted on Clou
 
 ## Tech Stack
 
-* **Astro:** Static site generator
-* **Tailwind CSS:** CSS framework
-* **TypeScript:** Programming language
-* **Cloudflare Pages:** Hosting provider
+- **Astro:** Static site generator
+- **Native CSS:** Styling and Catppuccin color themes
+- **Sätteri:** Markdown processing
+- **TypeScript:** Programming language
+- **Cloudflare Pages:** Hosting provider
 
 ## Getting Started
 
-This project uses npm for package management.  To get started, follow these steps:
+This project uses pnpm for package management. To get started, follow these steps:
 
 1. **Clone the repository:**
    ```bash
@@ -53,17 +54,17 @@ This project uses npm for package management.  To get started, follow these step
 
 2. **Install dependencies:**
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Run the development server:**
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 4. **Build the site:**
    ```bash
-   npm run build
+   pnpm build
    ```
 
 ## Contributing

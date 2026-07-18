@@ -1,56 +1,86 @@
 ---
-import Link from '@/components/Link.astro'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { Icon } from 'astro-icon/components'
+import type { CollectionEntry } from "astro:content"
 
-const { prevPost, nextPost } = Astro.props
+type Post = CollectionEntry<"blog">
+type Props = { prev?: Post; next?: Post }
+
+const { prev, next } = Astro.props
 ---
 
-<div class="col-start-2 flex flex-col gap-4 sm:flex-row">
-  <Link
-    href={nextPost ? `/blog/${nextPost.id}` : '#'}
-    class={cn(
-      buttonVariants({ variant: 'outline' }),
-      'rounded-xl group flex items-center justify-start w-full sm:w-1/2 h-fit',
-      !nextPost && 'pointer-events-none opacity-50 cursor-not-allowed',
-    )}
-    aria-disabled={!nextPost}
-  >
-    <div class="mr-2 flex-shrink-0">
-      <Icon
-        name="lucide:arrow-left"
-        class="size-4 transition-transform group-hover:-translate-x-1"
-      />
-    </div>
-    <div class="flex flex-col items-start overflow-hidden">
-      <span class="text-left text-xs text-muted-foreground">Newer Post</span>
-      <span class="w-full truncate text-left text-sm"
-        >{nextPost?.data.title || 'Latest post!'}</span
-      >
-    </div>
-  </Link>
-  <Link
-    href={prevPost ? `/blog/${prevPost.id}` : '#'}
-    class={cn(
-      buttonVariants({ variant: 'outline' }),
-      'rounded-xl group flex items-center justify-end w-full sm:w-1/2 h-fit',
-      !prevPost && 'pointer-events-none opacity-50 cursor-not-allowed',
-    )}
-    aria-disabled={!prevPost}
-  >
-    <div class="flex flex-col items-end overflow-hidden">
-      <span class="text-right text-xs text-muted-foreground">Older Post</span
-      >
-      <span class="w-full truncate text-right text-sm"
-        >{prevPost?.data.title || 'Last post!'}</span
-      >
-    </div>
-    <div class="ml-2 flex-shrink-0">
-      <Icon
-        name="lucide:arrow-right"
-        class="size-4 transition-transform group-hover:translate-x-1"
-      />
-    </div>
-  </Link>
-</div>
+{(prev || next) && (
+    <nav class="post-nav" aria-label="Post navigation">
+      {prev ? (
+        <a class="prev" href={`/blog/${prev.id}`}>
+          <span class="dir">&larr; Previous</span>
+          <span class="title">{prev.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <a class="next" href={`/blog/${next.id}`}>
+          <span class="dir">Next &rarr;</span>
+          <span class="title">{next.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )}
+
+<style>
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-s);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--border);
+  }
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-s);
+    color: var(--foreground);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    text-decoration: none;
+
+    &:hover {
+      border-color: var(--accent);
+    }
+  }
+
+  a.next {
+    text-align: right;
+  }
+
+  .dir {
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+  }
+
+  .title {
+    font-weight: var(--font-weight-medium);
+    line-height: calc(var(--leading-offset) + 1em);
+  }
+
+  a:hover .title {
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.15em;
+  }
+
+  @media (width < 32rem) {
+    .post-nav {
+      grid-template-columns: 1fr;
+    }
+
+    a.next {
+      text-align: left;
+    }
+  }
+</style>

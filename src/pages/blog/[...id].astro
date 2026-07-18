@@ -1,200 +1,130 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Link from '@/components/Link.astro'
-import PostNavigation from '@/components/PostNavigation.astro'
-import { badgeVariants } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import Layout from '@/layouts/Layout.astro'
-import { parseAuthors } from '@/lib/server-utils'
-import { formatDate, readingTime } from '@/lib/utils'
-import { Icon } from 'astro-icon/components'
-import { Image } from 'astro:assets'
-import { type CollectionEntry, getCollection, render } from 'astro:content'
+import MetaPost from "@/components/MetaPost.astro"
+import PostNavigation from "@/components/PostNavigation.astro"
+import ScrollToTop from "@/components/ScrollToTop.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getPosts } from "@/lib/content"
+import { formatDate } from "@/lib/utils"
+import { Image } from "astro:assets"
+import { render, type CollectionEntry } from "astro:content"
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog'))
-    .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  return posts.map((post) => ({
+  const posts = await getPosts()
+  return posts.map((post, i) => ({
     params: { id: post.id },
-    props: post,
+    props: { post, prev: posts[i + 1], next: posts[i - 1] },
   }))
 }
-type Props = CollectionEntry<'blog'>
 
-const posts = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-
-function getPostIndex(id: string): number {
-  return posts.findIndex((post) => post.id === id)
+type Props = {
+  post: CollectionEntry<"blog">
+  prev?: CollectionEntry<"blog">
+  next?: CollectionEntry<"blog">
 }
 
-function getPrevPost(id: string): Props | null {
-  const postIndex = getPostIndex(id)
-  return postIndex !== -1 && postIndex < posts.length - 1
-    ? posts[postIndex + 1]
-    : null
-}
-
-function getNextPost(id: string): Props | null {
-  const postIndex = getPostIndex(id)
-  return postIndex > 0 ? posts[postIndex - 1] : null
-}
-
-const currentPostId = Astro.params.id
-const nextPost = getNextPost(currentPostId)
-const prevPost = getPrevPost(currentPostId)
-
-const post = Astro.props
+const { post, prev, next } = Astro.props
 const { Content } = await render(post)
-
-const authors = await parseAuthors(post.data.authors ?? [])
+const crumbs = [
+  { label: "Blog", href: "/blog" },
+  { label: post.data.title, href: `/blog/${post.id}` },
+]
 ---
 
-<Layout
-  title={post.data.title}
-  description={post.data.description}
-  image={post.data.image?.src ?? '/static/1200x630.png'}
->
-  <section
-    class="grid grid-cols-[minmax(0px,1fr)_min(780px,100%)_minmax(0px,1fr)] gap-y-6 *:px-4"
-  >
-    <Breadcrumbs
-      items={[
-        { href: '/blog', label: 'Blog', icon: 'lucide:archive' },
-        { label: post.data.title, icon: 'lucide:file-text' },
-      ]}
-      class="col-start-2"
-    />
-    {
-      post.data.image && (
+<Layout crumbs={crumbs}>
+  <MetaPost slot="head" post={post} />
+  <ScrollToTop />
+  <article>
+    <header>
+      <h1>{post.data.title}</h1>
+      <post-meta>
+        <time datetime={post.data.date.toISOString()}>
+          {formatDate(post.data.date)}
+        </time>
+        {post.data.tags && (
+          <post-tags>
+            {post.data.tags.map((tag) => (
+              <a href={`/tags/${tag.toLowerCase()}`}>#{tag}</a>
+            ))}
+          </post-tags>
+        )}
+      </post-meta>
+      <p>{post.data.description}</p>
+    </header>
+    {post.data.image && (
+      <post-banner>
         <Image
           src={post.data.image}
           alt={post.data.title}
           width={1200}
           height={630}
-          class="col-span-full mx-auto w-full max-w-[1000px] object-cover"
+          priority
         />
-      )
-    }
-    <section class="col-start-2 flex flex-col gap-y-6 text-center">
-      <div class="flex flex-col gap-y-4">
-        <h1 class="mb-4 text-3xl font-bold leading-tight sm:text-5xl">
-          {post.data.title}
-        </h1>
-
-        <div
-          class="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground"
-        >
-          {
-            authors.length > 0 && (
-              <>
-                <div class="flex items-center gap-x-2">
-                  {authors.map((author) => (
-                    <div class="flex items-center gap-x-1.5">
-                      <Image
-                        src={author.avatar}
-                        alt={author.name}
-                        width={24}
-                        height={24}
-                        class="rounded-full"
-                      />
-                      {author.isRegistered ? (
-                        <Link
-                          href={`/authors/${author.id}`}
-                          underline
-                          class="text-foreground"
-                        >
-                          <span>{author.name}</span>
-                        </Link>
-                      ) : (
-                        <span>{author.name}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <Separator orientation="vertical" className="h-4" />
-              </>
-            )
-          }
-          <div class="flex items-center gap-2">
-            <span>{formatDate(post.data.date)}</span>
-            <Separator orientation="vertical" className="h-4" />
-            <span>{readingTime(post.body ?? '')}</span>
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-center gap-2">
-          {
-            post.data.tags && post.data.tags.length > 0 ? (
-              post.data.tags.map((tag) => (
-                <a
-                  href={`/tags/${tag}`}
-                  class={badgeVariants({ variant: 'secondary' })}
-                >
-                  <Icon name="lucide:hash" class="size-3 -translate-x-0.5" />
-                  {tag}
-                </a>
-              ))
-            ) : (
-              <span class="text-sm text-muted-foreground">
-                No tags available
-              </span>
-            )
-          }
-        </div>
-      </div>
-
-      <PostNavigation prevPost={prevPost} nextPost={nextPost} />
-    </section>
-
-
-    <article
-      class="prose prose-neutral col-start-2 max-w-none dark:prose-invert"
-    >
+      </post-banner>
+    )}
+    <prose-content>
       <Content />
-    </article>
-
-    <div class="col-start-2">
-      <PostNavigation prevPost={prevPost} nextPost={nextPost} />
-    </div>
-  </section>
-
-  <Button
-    variant="outline"
-    size="icon"
-    className="group fixed bottom-8 right-8 z-50 hidden"
-    id="scroll-to-top"
-    title="Scroll to top"
-    aria-label="Scroll to top"
-  >
-    <Icon
-      name="lucide:arrow-up"
-      class="mx-auto size-4 transition-all group-hover:-translate-y-0.5"
-    />
-  </Button>
-
-  <script>
-    document.addEventListener('astro:page-load', () => {
-      const scrollToTopButton = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
-
-      if (scrollToTopButton && footer) {
-        scrollToTopButton.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        })
-
-        window.addEventListener('scroll', () => {
-          const footerRect = footer.getBoundingClientRect()
-          const isFooterVisible = footerRect.top <= window.innerHeight
-
-          scrollToTopButton.classList.toggle(
-            'hidden',
-            window.scrollY <= 300 || isFooterVisible,
-          )
-        })
-      }
-    })
-  </script>
+    </prose-content>
+  </article>
+  <PostNavigation prev={prev} next={next} />
 </Layout>
+
+<style>
+  header {
+    margin-block-end: var(--space-m);
+
+    h1 {
+      font-size: var(--step-3);
+      line-height: calc(var(--leading-offset) + 1em);
+      font-weight: var(--font-weight-medium);
+    }
+
+    post-meta {
+      --underline: var(--muted-foreground);
+
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3xs);
+      margin-block-start: var(--space-3xs);
+      font-size: var(--step--1);
+      color: var(--muted-foreground);
+
+      post-tags {
+        --underline: transparent;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3xs);
+
+        a {
+          color: var(--muted-foreground);
+
+          &:hover {
+            color: var(--accent);
+          }
+        }
+      }
+
+      time ~ post-tags::before {
+        content: "·";
+      }
+    }
+
+    > p {
+      margin-block-start: var(--space-2xs);
+      font-size: var(--step--1);
+      color: var(--muted-foreground);
+    }
+  }
+
+  post-banner {
+    display: block;
+    margin-block-end: var(--space-m);
+
+    :global(img) {
+      inline-size: 100%;
+      block-size: auto;
+      border-radius: var(--radius-xl);
+    }
+  }
+</style>

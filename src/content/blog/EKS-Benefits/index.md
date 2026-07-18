@@ -1,0 +1,31 @@
+---
+title: "Amazon EKS vs. Self-Managed Kubernetes"
+date: "2022-10-30"
+tags: ["AWS", "EKS"]
+description: "Compare Amazon EKS with self-managed Kubernetes across operations, control, scalability, and maintenance."
+image: "./images/EKS-Benefits.webp"
+---
+Amazon EKS (Elastic Kubernetes Service) is a fully managed, cloud-based service that helps to build, secure, and maintain Kubernetes clusters with AWS.
+
+It automates functions such as patching, node provisioning, and installing updates. The service allows node management functions for admins, as this allows for greater access control. EKS helps to automatically manage both the availability and scalability of a Kubernetes API server and the etcd persistence layer.
+
+Those using AWS who wish to implement Kubernetes have two primary options: self-deployment or utilizing Amazon's managed service. Both options have their own advantages and disadvantages.
+
+AWS offers its own managed container orchestration service, Amazon Elastic Container Service (ECS), which has seen significant success. Another option is to run one's own Kubernetes clusters on Amazon Elastic Compute Cloud (EC2). However, due to high demand, in 2017, Amazon introduced Elastic Container Service for Kubernetes (EKS) as a managed Kubernetes service.
+
+To choose between EKS and self-managed Kubernetes, carefully consider the benefits and drawbacks of each option.
+
+## Kubernetes on AWS: Know your options
+EKS, Amazon's managed Kubernetes service, manages the control plane, comprising of elements like the etcd and Kubernetes API server, with integration to other AWS services such as Identity and Access Management (IAM).
+
+The management infrastructure runs automatically across multiple availability zones, replacing any unhealthy nodes to ensure high availability, as well as handling all upgrades and patching.
+
+For users, the EKS control plane functions as a transparent service. For the data plane, EKS users can choose from three options: self-managed nodes, EKS-managed node groups, or AWS Fargate.
+
+EKS is a fully managed Kubernetes service provided by Amazon. With EKS, Amazon takes care of the management and maintenance of the Kubernetes control plane, which includes tasks such as scaling, upgrades, and patches. Additionally, EKS ensures high availability across multiple availability zones. This means that users only need to manage the worker nodes and the applications that run on top of them. This can be a more convenient option for users who want to focus on running their applications and don't want to spend time managing the underlying infrastructure.
+
+On the other hand, self-managed Kubernetes on AWS requires users to manage the entire Kubernetes cluster themselves. This includes managing the control plane and the worker nodes. Users will also need to handle tasks such as scaling, upgrades, and patches themselves. While this option requires more work and expertise, it does offer more flexibility and control over the Kubernetes cluster.
+
+Another important aspect to consider is the cost. EKS is a paid service, and users will need to pay for the resources they use, such as the number of worker nodes, storage, and data transfer. While self-managed Kubernetes on AWS also incurs costs for the resources used, it can be more cost-effective for users who are comfortable managing the cluster themselves.
+
+In summary, EKS is a convenient option for users who want to focus on running their applications and don't want to spend time managing the underlying infrastructure. Self-managed Kubernetes on AWS, on the other hand, offers more flexibility and control over the cluster, but requires more work and expertise. Ultimately, the decision between EKS and self-managed Kubernetes on AWS will depend on your specific needs and requirements.

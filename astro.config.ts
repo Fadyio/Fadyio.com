@@ -1,74 +1,40 @@
-import { rehypeHeadingIds } from '@astrojs/markdown-remark'
-import mdx from '@astrojs/mdx'
-import react from '@astrojs/react'
-import sitemap from '@astrojs/sitemap'
-
-import { defineConfig } from 'astro/config'
-import remarkEmoji from 'remark-emoji'
-import sectionize from '@hbsnow/rehype-sectionize'
-import icon from 'astro-icon'
-import expressiveCode from 'astro-expressive-code'
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
-import rehypeExternalLinks from 'rehype-external-links'
+import { defineConfig } from "astro/config"
+import sitemap from "@astrojs/sitemap"
+import { satteri } from "@astrojs/markdown-satteri"
+import {
+  blockExpressiveCode,
+  inlineExpressiveCode,
+} from "./src/lib/expressive-code"
+import { temmlMath } from "./src/lib/math"
+import { calloutDirective } from "./src/lib/callout"
+import { externalLinks } from "./src/lib/external-links"
+import { headingAnchors } from "./src/lib/heading-anchors"
 
 export default defineConfig({
-  site: 'https://fadyio.com',
-  trailingSlash: 'never',
+  site: "https://fadyio.com",
+  trailingSlash: "never",
   build: {
-    format: 'file',
+    format: "file",
   },
-  integrations: [
-    sitemap(),
-    expressiveCode({
-      themes: ['catppuccin-latte', 'catppuccin-mocha'],
-      plugins: [pluginLineNumbers()],
-      useDarkModeMediaQuery: false,
-      themeCssSelector: (theme) => {
-        // Match dark/light class on html element
-        return theme.name === 'catppuccin-mocha' ? '.dark' : ':root:not(.dark)'
-      },
-      defaultProps: {
-        showLineNumbers: true,
-        overridesByLang: {
-          // Disable line numbers for terminal/shell languages
-          'bash,sh,zsh,shell,terminal,console,powershell': {
-            showLineNumbers: false,
-          },
-        },
-      },
-      styleOverrides: {
-        borderRadius: '0.75rem',
-        codeFontSize: '1rem',
-        codeLineHeight: '1.75',
-        codePaddingBlock: '1rem',
-        codePaddingInline: '1rem',
-        codeFontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-      },
-    }),
-    mdx(),
-    react(),
-    icon(),
-  ],
-  markdown: {
-    syntaxHighlight: false,
-    rehypePlugins: [
-      rehypeHeadingIds,
-      sectionize,
-      [
-        rehypeExternalLinks,
-        {
-          target: '_blank',
-          rel: ['nofollow', 'noopener', 'noreferrer'],
-        },
-      ],
-    ],
-    remarkPlugins: [remarkEmoji],
-  },
+  prefetch: { prefetchAll: true },
   server: {
     port: 1234,
     host: true,
   },
   devToolbar: {
     enabled: false,
+  },
+  integrations: [
+    sitemap({
+      filter: (page) => !/^\/tags(?:\/|$)/.test(new URL(page).pathname),
+    }),
+  ],
+  markdown: {
+    syntaxHighlight: false,
+    processor: satteri({
+      features: { directive: true, math: true },
+      mdastPlugins: [calloutDirective, inlineExpressiveCode, temmlMath],
+      hastPlugins: [externalLinks, blockExpressiveCode, headingAnchors],
+    }),
   },
 })

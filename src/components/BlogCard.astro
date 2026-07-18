@@ -1,88 +1,121 @@
 ---
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { parseAuthors } from '@/lib/server-utils'
-import { formatDate, readingTime } from '@/lib/utils'
-import { Image } from 'astro:assets'
-import type { CollectionEntry } from 'astro:content'
-import Link from './Link.astro'
+import { formatDate } from "@/lib/utils"
+import { Image } from "astro:assets"
+import type { CollectionEntry } from "astro:content"
 
 type Props = {
-  entry: CollectionEntry<'blog'>
+  post: CollectionEntry<"blog">
+  headingLevel?: 2 | 3
 }
 
-const { entry } = Astro.props as {
-  entry: CollectionEntry<'blog'>
-}
-
-const formattedDate = formatDate(entry.data.date)
-const readTime = readingTime(entry.body ?? '')
-const authors = await parseAuthors(entry.data.authors ?? [])
+const { post, headingLevel = 2 } = Astro.props
+const Heading = `h${headingLevel}` as "h2" | "h3"
 ---
 
-<div
-  class="not-prose rounded-xl border p-4 transition-colors duration-300 ease-in-out hover:bg-secondary/50"
->
-  <Link
-    href={`/${entry.collection}/${entry.id}`}
-    class="flex flex-col gap-4 sm:flex-row"
-  >
-    {
-      entry.data.image && (
-        <div class="max-w-[200px] sm:flex-shrink-0">
-          <Image
-            src={entry.data.image}
-            alt={entry.data.title}
-            width={1200}
-            height={630}
-            class="object-cover"
-          />
-        </div>
-      )
-    }
-    <div class="flex-grow">
-      <h3 class="mb-1 text-lg font-semibold">
-        {entry.data.title}
-      </h3>
-      <p class="mb-2 text-sm text-muted-foreground">
-        {entry.data.description}
-      </p>
-      <div
-        class="mb-2 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground"
-      >
-        {
-          authors.length > 0 && (
-            <>
-              {authors.map((author) => (
-                <div class="flex items-center gap-x-1.5">
-                  <img
-                    src={author.avatar}
-                    alt={author.name}
-                    width="20"
-                    height="20"
-                    class="size-5 rounded-full object-cover"
-                    loading="lazy"
-                  />
-                  <span>{author.name}</span>
-                </div>
-              ))}
-              <Separator orientation="vertical" className="h-4" />
-            </>
-          )
-        }
-        <span>{formattedDate}</span>
-        <Separator orientation="vertical" className="h-4" />
-        <span>{readTime}</span>
-      </div>
-      {
-        entry.data.tags && (
-          <div class="flex flex-wrap gap-2">
-            {entry.data.tags.map((tag) => (
-              <Badge variant="secondary">{tag}</Badge>
-            ))}
-          </div>
-        )
+<li>
+  {post.data.image && (
+    <a href={`/blog/${post.id}`} tabindex="-1" aria-hidden="true">
+      <Image src={post.data.image} alt="" width={640} height={336} />
+    </a>
+  )}
+  <entry-info>
+    <Heading><a href={`/blog/${post.id}`}>{post.data.title}</a></Heading>
+    <entry-meta>
+      <time datetime={post.data.date.toISOString()}>
+        {formatDate(post.data.date)}
+      </time>
+      {post.data.tags && (
+        <entry-tags>
+          {post.data.tags.map((tag) => (
+            <a href={`/tags/${tag.toLowerCase()}`}>#{tag}</a>
+          ))}
+        </entry-tags>
+      )}
+    </entry-meta>
+    <p>{post.data.description}</p>
+  </entry-info>
+</li>
+
+<style>
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-s);
+    padding: var(--space-s);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+
+    > a {
+      flex-shrink: 0;
+      inline-size: 14rem;
+
+      :global(img) {
+        inline-size: 100%;
+        block-size: auto;
+        border-radius: var(--radius-lg);
       }
-    </div>
-  </Link>
-</div>
+    }
+
+    entry-info {
+      display: flex;
+      min-inline-size: 0;
+      flex-direction: column;
+
+      > :is(h2, h3) {
+        font-size: var(--step-1);
+        line-height: calc(var(--leading-offset) + 1em);
+        font-weight: var(--font-weight-medium);
+
+        a {
+          color: inherit;
+
+          &:hover {
+            color: var(--accent);
+          }
+        }
+      }
+
+      entry-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-3xs);
+        margin-block-end: var(--space-3xs);
+        font-size: var(--step--1);
+        color: var(--muted-foreground);
+
+        entry-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-3xs);
+
+          a {
+            color: var(--muted-foreground);
+
+            &:hover {
+              color: var(--accent);
+            }
+          }
+        }
+
+        time ~ entry-tags::before {
+          content: "·";
+        }
+      }
+
+      p {
+        color: var(--muted-foreground);
+      }
+    }
+
+    @media (width < 40rem) {
+      flex-direction: column;
+
+      > a {
+        inline-size: 100%;
+        max-inline-size: 32rem;
+      }
+    }
+  }
+</style>

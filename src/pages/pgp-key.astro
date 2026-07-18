@@ -1,0 +1,230 @@
+---
+import MetaPage from "@/components/MetaPage.astro"
+import Layout from "@/layouts/Layout.astro"
+import { readFile } from "node:fs/promises"
+import { join } from "node:path"
+
+const publicKey = (
+  await readFile(join(process.cwd(), "public/gpg-key.txt"), "utf8")
+).trim()
+
+const fingerprint = "E804 8598 BFE2 9B79 168C 33C5 B32E 4B95 8EAB 3137"
+---
+
+<Layout crumbs={[{ label: "PGP Key", href: "/pgp-key" }]}>
+  <MetaPage
+    slot="head"
+    title="PGP Public Key"
+    description="Fady Nagh's PGP public key and fingerprint for encrypted communication and signature verification."
+  />
+
+  <article>
+    <header>
+      <p class="eyebrow">Secure communication</p>
+      <h1>PGP Public Key</h1>
+      <p>
+        Use this public key to encrypt messages for me or verify signatures.
+        Confirm the fingerprint through a trusted channel before relying on it.
+      </p>
+    </header>
+
+    <section class="fingerprint" aria-labelledby="fingerprint-heading">
+      <div>
+        <h2 id="fingerprint-heading">Fingerprint</h2>
+        <code>{fingerprint}</code>
+      </div>
+      <a href="/gpg-key.txt" download>Download key</a>
+    </section>
+
+    <section class="key-panel" aria-labelledby="key-heading">
+      <div class="key-toolbar">
+        <div>
+          <h2 id="key-heading">ASCII-armored key</h2>
+          <p data-copy-status aria-live="polite">Ready to copy</p>
+        </div>
+        <button type="button" data-copy-key>Copy key</button>
+      </div>
+      <pre tabindex="0"><code data-public-key>{publicKey}</code></pre>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  header {
+    h1 {
+      font-size: var(--step-3);
+      line-height: calc(var(--leading-offset) + 1em);
+      font-weight: var(--font-weight-medium);
+    }
+
+    > p:last-child {
+      max-inline-size: var(--measure);
+      margin-block-start: var(--space-xs);
+      color: var(--muted-foreground);
+    }
+  }
+
+  .eyebrow {
+    margin-block-end: var(--space-3xs);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .fingerprint,
+  .key-panel {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+
+  .fingerprint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: var(--space-s);
+
+    h2,
+    code {
+      font-size: var(--step--1);
+    }
+
+    h2 {
+      margin-block-end: var(--space-3xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--muted-foreground);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      overflow-wrap: anywhere;
+    }
+
+    a {
+      flex-shrink: 0;
+      padding: var(--space-2xs) var(--space-xs);
+      color: var(--accent-foreground);
+      background-color: var(--accent);
+      border-radius: var(--radius-lg);
+      font-weight: var(--font-weight-medium);
+      text-decoration: none;
+
+      &:hover {
+        filter: brightness(1.08);
+      }
+    }
+  }
+
+  .key-panel {
+    overflow: hidden;
+  }
+
+  .key-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: var(--space-xs) var(--space-s);
+    background-color: var(--surface-elevated);
+    border-block-end: 1px solid var(--border);
+
+    h2 {
+      font-size: var(--step-0);
+      font-weight: var(--font-weight-medium);
+    }
+
+    p {
+      font-size: var(--step--1);
+      color: var(--muted-foreground);
+    }
+
+    button {
+      min-inline-size: 6.5rem;
+      padding: var(--space-2xs) var(--space-xs);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-lg);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+
+      &:hover,
+      &[data-copied] {
+        color: var(--accent-foreground);
+        background-color: var(--accent);
+      }
+    }
+  }
+
+  pre {
+    max-block-size: min(65vh, 46rem);
+    padding: var(--space-s);
+    overflow: auto;
+    background-color: var(--surface);
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: calc(var(--leading-offset) + 1em);
+  }
+
+  @media (width < 40rem) {
+    .fingerprint,
+    .key-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-copy-key]")
+  const key = document.querySelector<HTMLElement>("[data-public-key]")
+  const status = document.querySelector<HTMLElement>("[data-copy-status]")
+
+  const copyText = async (value: string) => {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(value)
+      return
+    }
+
+    const textarea = document.createElement("textarea")
+    textarea.value = value
+    textarea.style.position = "fixed"
+    textarea.style.opacity = "0"
+    document.body.append(textarea)
+    textarea.select()
+    const copied = document.execCommand("copy")
+    textarea.remove()
+    if (!copied) throw new Error("Copy command failed")
+  }
+
+  button?.addEventListener("click", async () => {
+    if (!key || !status) return
+
+    try {
+      await copyText(key.textContent?.trim() ?? "")
+      button.textContent = "Copied"
+      button.dataset.copied = ""
+      status.textContent = "Public key copied to your clipboard"
+    } catch {
+      button.textContent = "Copy failed"
+      status.textContent = "Select the key text and copy it manually"
+    }
+
+    window.setTimeout(() => {
+      button.textContent = "Copy key"
+      delete button.dataset.copied
+      status.textContent = "Ready to copy"
+    }, 2500)
+  })
+</script>

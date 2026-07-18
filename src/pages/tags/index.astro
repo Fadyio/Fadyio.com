@@ -1,49 +1,54 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Container from '@/components/Container.astro'
-import Link from '@/components/Link.astro'
-import { badgeVariants } from '@/components/ui/badge'
-import Layout from '@/layouts/Layout.astro'
-import { Icon } from 'astro-icon/components'
-import { getCollection } from 'astro:content'
+import MetaPage from "@/components/MetaPage.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getTags } from "@/lib/content"
 
-const blog = (await getCollection('blog')).filter((post) => !post.data.draft)
-
-const tagCounts = blog.reduce((acc, post) => {
-  post.data.tags?.forEach((tag) => {
-    acc.set(tag, (acc.get(tag) || 0) + 1)
-  })
-  return acc
-}, new Map())
-
-const tags = [...tagCounts.keys()].sort((a, b) => {
-  const countDiff = tagCounts.get(b)! - tagCounts.get(a)!
-  return countDiff !== 0 ? countDiff : a.localeCompare(b)
-})
+const tags = await getTags()
 ---
 
-<Layout title="Tags" description="A list of all tags used in blog posts">
-  <Container class="flex flex-col gap-y-6">
-    <Breadcrumbs items={[{ label: 'Tags', icon: 'lucide:tags' }]} />
-
-    <div class="flex flex-col gap-4">
-      <h1 class="text-3xl font-semibold">Tags</h1>
-      <div class="flex flex-wrap gap-2">
-        {
-          tags.map((tag) => (
-            <Link
-              href={`/tags/${tag}`}
-              class={badgeVariants({ variant: 'secondary' })}
-            >
-              <Icon name="lucide:hash" class="size-3 -translate-x-0.5" />
-              {tag}
-              <span class="ml-1.5 text-muted-foreground">
-                ({tagCounts.get(tag)})
-              </span>
-            </Link>
-          ))
-        }
-      </div>
-    </div>
-  </Container>
+<Layout crumbs={[{ label: "Tags", href: "/tags" }]}>
+  <MetaPage slot="head" title="Tags" noindex />
+  <h1>Tags</h1>
+  <ul>
+    {[...tags].map(([tag, posts]) => (
+      <li>
+        <a href={`/tags/${tag.toLowerCase()}`}>
+          #{tag}<tag-count>{posts.length}</tag-count>
+        </a>
+      </li>
+    ))}
+  </ul>
 </Layout>
+
+<style>
+  h1 {
+    margin-block-end: var(--space-m);
+    font-size: var(--step-3);
+    line-height: calc(var(--leading-offset) + 1em);
+    font-weight: var(--font-weight-medium);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+
+    a {
+      display: inline-block;
+      padding-inline: var(--space-2xs);
+      font-size: var(--step--1);
+      color: var(--muted-foreground);
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+      border-radius: var(--radius-full);
+      text-decoration-line: none;
+
+      &:hover {
+        color: var(--foreground);
+      }
+
+      tag-count {
+        margin-inline-start: var(--space-3xs);
+      }
+    }
+  }
+</style>

@@ -1,42 +1,120 @@
 ---
-import Footer from '@/components/Footer.astro'
-import Head from '@/components/Head.astro'
-import Header from '@/components/Header.astro'
-import { SITE } from '@/consts'
+import "@/styles/reset.css"
+import "@/styles/fonts.css"
+import "@/styles/color.css"
+import "@/styles/typography.css"
+import "@/styles/typography-headings.css"
+import "@/styles/typography-inline.css"
+import "@/styles/typography-lists.css"
+import "@/styles/typography-block.css"
+import "@/styles/typography-tables.css"
+import "@/styles/callout.css"
+import "@/styles/layout.css"
+import "@/styles/icon-button.css"
+import "@/styles/shape.css"
 
-type Props = {
-  title: string
-  description: string
-  image?: string
-}
+import Footer from "@/components/Footer.astro"
+import Header from "@/components/Header.astro"
+import MetaHead from "@/components/MetaHead.astro"
+import { SITE } from "@/consts"
 
-const { title, description, image } = Astro.props
+type Props = { crumbs?: { label: string; href: string }[] }
+
+const { crumbs } = Astro.props
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <Head
-      title={`${title} | ${SITE.TITLE}`}
-      description={description}
-      image={image}
-    />
-  </head>
+<html lang={SITE.locale} dir={SITE.dir}>
+  <MetaHead>
+    <slot name="head" />
+  </MetaHead>
   <body>
-    <a
-      href="#main-content"
-      class="fixed left-4 top-4 z-50 -translate-y-16 rounded-md bg-primary px-4 py-2 text-primary-foreground transition-transform focus:translate-y-0"
-    >
-      Skip to content
-    </a>
-    <div
-      class="box-border flex h-fit min-h-screen flex-col gap-y-6 font-sans antialiased"
-    >
-      <Header />
-      <main id="main-content" class="flex-grow">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <Header />
+    <div class="page">
+      <main id="main-content" class="container">
+        {crumbs && crumbs.length > 0 && (
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            {crumbs.map((crumb, i) => (
+              <>
+                <span aria-hidden="true">/</span>
+                <a
+                  href={crumb.href}
+                  aria-current={i === crumbs.length - 1 ? "page" : undefined}
+                >
+                  {crumb.label}
+                </a>
+              </>
+            ))}
+          </nav>
+        )}
         <slot />
       </main>
-      <Footer />
+      <div class="container">
+        <Footer />
+      </div>
     </div>
   </body>
 </html>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--header-height));
+  }
+
+  .container {
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--space-s);
+  }
+
+  main {
+    flex: 1;
+    padding-block-start: var(--space-l);
+  }
+
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin-block-end: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+
+    a {
+      color: var(--muted-foreground);
+      text-decoration: none;
+
+      &:hover,
+      &[aria-current="page"] {
+        color: var(--foreground);
+      }
+    }
+
+    span {
+      opacity: 0.5;
+    }
+  }
+
+  .skip-link {
+    position: fixed;
+    inset-block-start: var(--space-s);
+    inset-inline-start: var(--space-s);
+    z-index: 50;
+    padding: var(--space-2xs) var(--space-s);
+    background-color: var(--foreground);
+    color: var(--background);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform 0.2s ease;
+
+    &:focus-visible {
+      transform: translateY(0);
+    }
+  }
+</style>

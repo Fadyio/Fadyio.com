@@ -1,65 +1,243 @@
 ---
-import BlogCard from '@/components/BlogCard.astro'
-import Container from '@/components/Container.astro'
-import Link from '@/components/Link.astro'
-import { buttonVariants } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { SITE } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import { Image } from "astro:assets"
+import portrait from "@/assets/fady-nagh.png"
+import Email from "@/assets/icons/email.svg"
+import GitHub from "@/assets/icons/github.svg"
+import LinkedIn from "@/assets/icons/linkedin.svg"
+import BlogCard from "@/components/BlogCard.astro"
+import MetaPage from "@/components/MetaPage.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getPosts } from "@/lib/content"
 
-const blog = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
+const RECENT_POSTS = 3
+const posts = (await getPosts()).slice(0, RECENT_POSTS)
+
+const CONTACTS = [
+  {
+    label: "GitHub",
+    detail: "@Fadyio",
+    href: "https://github.com/Fadyio",
+    icon: GitHub,
+  },
+  {
+    label: "LinkedIn",
+    detail: "/in/Fadyio",
+    href: "https://linkedin.com/in/Fadyio",
+    icon: LinkedIn,
+  },
+  {
+    label: "Email",
+    detail: "Fady@Fadyio.com",
+    href: "mailto:Fady@Fadyio.com",
+    icon: Email,
+  },
+]
 ---
 
-<Layout title="Home" description={SITE.DESCRIPTION}>
-  <Container class="flex flex-col gap-y-6">
-    <section>
-      <Card>
-            <CardHeader>
-          <CardTitle className="text-4xl">Hi, I'm Fady</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="mb-2 text-muted-foreground font-medium">
-            Hey there! I’m Fady Nagh, a DevOps engineer who’s totally hooked on tech. 
-            I go as ‘Fadyio’ on most platforms, I love messing around with Linux, diving into cloud stuff,
-            and just geeking out over IT in general. 
-            When I’m not knee-deep in code or servers, you’ll catch me with a good book. 
-            Here, I share a bit of everything, quick notes when I’m scribbling thoughts, 
-            or detailed step-by-step guides when I’m feeling extra helpful.
-          </p>
-        </CardContent>
-      </Card>
-    </section>
-    <section class="flex flex-col gap-y-4">
-      <h2 class="text-2xl font-bold">Latest posts</h2>
-      <ul class="not-prose flex flex-col gap-y-4">
-        {
-          blog.map((post) => (
+<Layout>
+  <MetaPage
+    slot="head"
+    description="Fady Nagh is a DevOps engineer who writes about AWS, Kubernetes, Linux, privacy, and cloud-native technology."
+  />
+
+  <section class="profile" aria-labelledby="profile-name">
+    <div class="portrait">
+      <Image
+        src={portrait}
+        alt="Fady Nagh"
+        width={320}
+        height={320}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="bio">
+      <h1 id="profile-name">Fady Nagh</h1>
+      <p>
+        I'm a DevOps engineer who enjoys Linux, cloud infrastructure, and
+        learning how systems work.
+      </p>
+      <p>
+        I go by “Fadyio” on most platforms. I spend a lot of my time exploring
+        AWS, Kubernetes, Docker, self-hosting, privacy, and cloud-native tools.
+        When I'm away from terminals and infrastructure, you'll usually find me
+        reading a good book.
+      </p>
+      <p>
+        This site is where I keep practical notes, lessons learned, and detailed
+        guides that might help someone solving the same problems.
+      </p>
+
+      <ul class="contacts" aria-label="Contact Fady Nagh">
+        {CONTACTS.map(({ label, detail, href, icon: Icon }) => {
+          const external = href.startsWith("https://")
+          return (
             <li>
-              <BlogCard entry={post} />
+              <a
+                href={href}
+                aria-label={label}
+                title={`${label}: ${detail}`}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+              >
+                <Icon aria-hidden="true" />
+              </a>
             </li>
-          ))
-        }
+          )
+        })}
       </ul>
-      <div class="flex justify-center">
-        <Link
-          href="/blog"
-          class={buttonVariants({ variant: 'ghost' }) + ' group'}
-        >
-          See all posts <span
-            class="ml-1.5 transition-transform group-hover:translate-x-1"
-            >&rarr;</span
-          >
-        </Link>
-      </div>
-    </section>
-  </Container>
+    </div>
+  </section>
+
+  <section class="latest">
+    <h2>Latest posts</h2>
+    <ul>
+      {posts.map((post) => <BlogCard post={post} headingLevel={3} />)}
+    </ul>
+    <a class="see-all" href="/blog">See all posts <span>&rarr;</span></a>
+  </section>
 </Layout>
+
+<style>
+  .profile {
+    display: grid;
+    grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr);
+    align-items: stretch;
+    gap: var(--space-l);
+    margin-block-end: var(--space-xl);
+  }
+
+  .portrait {
+    block-size: 100%;
+
+    > img {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+    }
+  }
+
+  .bio {
+    display: flex;
+    align-self: stretch;
+    flex-direction: column;
+
+    h1 {
+      margin-block-start: -0.08em;
+      margin-block-end: var(--space-m);
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      line-height: 1;
+      font-weight: var(--font-weight-medium);
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      color: var(--prose-foreground);
+      line-height: calc(var(--leading-offset) + 1em);
+      text-wrap: pretty;
+
+      + p {
+        margin-block-start: var(--space-xs);
+      }
+    }
+  }
+
+  .contacts {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin-block-start: auto;
+    padding-block-start: var(--space-m);
+    padding-inline-start: 0;
+    list-style: none;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      inline-size: 2.75rem;
+      block-size: 2.75rem;
+      color: var(--muted-foreground);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--accent);
+        background-color: var(--surface-elevated);
+      }
+    }
+
+    svg {
+      inline-size: 1.75rem;
+      block-size: 1.75rem;
+    }
+  }
+
+  .latest {
+    h2 {
+      font-size: var(--step-2);
+      font-weight: var(--font-weight-medium);
+      margin-block-end: var(--space-m);
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    margin-block-start: var(--space-m);
+    color: var(--muted-foreground);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--foreground);
+
+      span {
+        transform: translateX(0.2em);
+      }
+    }
+
+    span {
+      transition: transform 0.2s ease;
+    }
+  }
+
+  @media (width < 40rem) {
+    .profile {
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: var(--space-m);
+    }
+
+    .portrait {
+      max-inline-size: 18rem;
+      block-size: auto;
+
+      > img {
+        block-size: auto;
+        aspect-ratio: 1;
+      }
+    }
+
+    .bio h1 {
+      font-size: clamp(3rem, 16vw, 4.5rem);
+    }
+
+    .contacts {
+      margin-block-start: 0;
+    }
+  }
+</style>

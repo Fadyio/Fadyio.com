@@ -1,0 +1,76 @@
+---
+import sansWoff2 from "@/assets/fonts/IBMPlexSans-VariableFont_wdth,wght.woff2?url"
+import { SITE } from "@/consts"
+---
+
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=yes"
+  >
+  <meta name="generator" content={Astro.generator}>
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content={SITE.title}>
+  <meta
+    name="format-detection"
+    content="telephone=no,date=no,address=no,email=no,url=no"
+  >
+
+  <meta name="theme-color" content="#eff1f5" data-theme-color>
+
+  <link
+    rel="icon"
+    type="image/webp"
+    sizes="32x32"
+    href="/favicon/favicon-32x32.webp"
+  >
+  <link
+    rel="icon"
+    type="image/webp"
+    sizes="16x16"
+    href="/favicon/favicon-16x16.webp"
+  >
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="/favicon/apple-touch-icon.webp"
+  >
+  <link rel="mask-icon" href="/favicon/logo.svg" color="#181825">
+  <link rel="manifest" href="/favicon/site.webmanifest">
+
+  <link rel="sitemap" href="/sitemap-index.xml">
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={SITE.title}
+    href={new URL("rss.xml", Astro.site)}
+  >
+
+  <link rel="preload" href={sansWoff2} as="font" type="font/woff2" crossorigin>
+
+  <script is:inline>
+    const root = document.documentElement
+    const systemDark = matchMedia("(prefers-color-scheme: dark)").matches
+    let storedTheme
+
+    try {
+      const value = localStorage.theme
+      if (value === "light" || value === "dark") storedTheme = value
+    } catch {
+      // Follow the operating system theme when storage is unavailable.
+    }
+
+    if (storedTheme) root.dataset.theme = storedTheme
+
+    const dark = storedTheme === "dark" || (!storedTheme && systemDark)
+    document
+      .querySelector("[data-theme-color]")
+      ?.setAttribute("content", dark ? "#181825" : "#eff1f5")
+  </script>
+
+  <slot />
+</head>

@@ -1,83 +1,162 @@
 ---
-import Container from '@/components/Container.astro'
-import Link from '@/components/Link.astro'
-import MobileMenu from '@/components/ui/mobile-menu'
-import { ModeToggle } from '@/components/ui/mode-toggle'
-import { NAV_LINKS, SITE } from '@/consts'
-import { Image } from 'astro:assets'
-import logo from '../../public/static/logo.webp'
+import ThemeToggle from "@/components/ThemeToggle.astro"
+import { NAVIGATION, SITE } from "@/consts"
+import { normalizePath } from "@/lib/utils"
+
+const pathname = normalizePath(Astro.url.pathname) || "/"
+const isActive = (href: string) =>
+  href.startsWith("/") && !href.includes(".")
+    ? pathname === href || pathname.startsWith(`${href}/`)
+    : false
 ---
 
-<header
-  id="main-header"
-  class="sticky top-0 z-10 bg-background/50 backdrop-blur-md transition-all duration-300"
-  transition:persist
->
-  <Container>
-    <div class="flex flex-wrap items-center justify-between gap-4 py-4">
-      <Link
-        href="/"
-        class="flex flex-shrink-0 items-center gap-2 text-xl font-semibold transition-colors duration-300 hover:text-primary"
-      >
-        <Image src={logo} alt="Logo" class="size-8" />
-        {SITE.TITLE}
-      </Link>
-      <div class="flex items-center gap-2 md:gap-4">
-        <nav aria-label="Main navigation" class="hidden items-center gap-4 text-sm sm:gap-6 md:flex">
-          {
-            NAV_LINKS.map((item) => (
-              <Link
+<header id="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label={SITE.title}>
+      <img src="/static/logo.webp" alt="" width="28" height="28">
+      <span>{SITE.title}</span>
+    </a>
+    <div class="header-actions">
+      <nav aria-label="Main navigation">
+        <ul>
+          {NAVIGATION.map((item) => (
+            <li>
+              <a
                 href={item.href}
-                class="capitalize text-foreground/60 transition-colors hover:text-foreground/80"
+                aria-current={isActive(item.href) ? "page" : undefined}
               >
                 {item.label}
-              </Link>
-            ))
-          }
-        </nav>
-        <MobileMenu client:load />
-        <ModeToggle client:load />
-      </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <ThemeToggle />
     </div>
-  </Container>
+  </div>
 </header>
 
-<script>
-  function initHeaderScroll() {
-    const header = document.getElementById('main-header');
-    if (!header) return;
-
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const updateHeader = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // Scrolling down - hide header
-        header.style.transform = 'translateY(-100%)';
-        header.style.opacity = '0';
-      } else {
-        // Scrolling up - show header
-        header.style.transform = 'translateY(0)';
-        header.style.opacity = '1';
-      }
-      
-      lastScrollY = currentScrollY;
-      ticking = false;
-    };
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(updateHeader);
-        ticking = true;
-      }
-    });
+<style>
+  #site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: color-mix(in oklab, var(--background) 80%, transparent);
+    backdrop-filter: blur(var(--blur-md));
+    border-block-end: 1px solid var(--border);
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    will-change: transform;
   }
 
-  // Run on initial load
-  initHeaderScroll();
+  #site-header[data-hidden]:not(:focus-within) {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
 
-  // Re-run after Astro page transitions
-  document.addEventListener('astro:after-swap', initHeaderScroll);
+  .header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    min-block-size: var(--header-height);
+    margin-inline: auto;
+    padding-inline: var(--space-s);
+    padding-block: var(--space-2xs);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    img {
+      inline-size: 1.75rem;
+      block-size: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--step-0);
+
+    a {
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover,
+      &[aria-current="page"] {
+        color: var(--foreground);
+      }
+    }
+  }
+
+  @media (width < 32rem) {
+    nav ul {
+      gap: var(--space-xs);
+      font-size: var(--step--1);
+    }
+
+    .brand span {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById("site-header")
+
+  if (header) {
+    let lastY = window.scrollY
+    let ticking = false
+
+    const update = () => {
+      const y = window.scrollY
+      if (y > lastY && y > 80) {
+        header.dataset.hidden = "true"
+      } else {
+        delete header.dataset.hidden
+      }
+      lastY = y
+      ticking = false
+    }
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update)
+          ticking = true
+        }
+      },
+      { passive: true },
+    )
+  }
 </script>

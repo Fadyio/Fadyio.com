@@ -1,62 +1,39 @@
-import { glob } from 'astro/loaders'
-import { defineCollection, z } from 'astro:content'
+import { glob } from "astro/loaders"
+import { defineCollection } from "astro:content"
+import { z } from "astro/zod"
 
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  loader: glob({
+    pattern: "**/[^_]*.md",
+    base: "./src/content/blog",
+  }),
   schema: ({ image }) =>
     z.object({
-      title: z
-        .string()
-        .max(
-          60,
-          'Title should be 60 characters or less for optimal Open Graph display.',
-        ),
-      description: z
-        .string()
-        .max(
-          155,
-          'Description should be 155 characters or less for optimal Open Graph display.',
-        ),
+      title: z.string(),
+      description: z.string(),
       date: z.coerce.date(),
-      image: image().optional(),
       tags: z.array(z.string()).optional(),
-      author: z.string().optional(),
-      authors: z.array(z.string()).optional(),
+      image: image().optional(),
       draft: z.boolean().optional(),
-    }).transform((data) => {
-      if (data.author && !data.authors) {
-        data.authors = [data.author]
-      }
-      return data
     }),
 })
 
-const authors = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/authors' }),
-  schema: z.object({
-    name: z.string(),
-    pronouns: z.string().optional(),
-    avatar: z.url(),
-    bio: z.string().optional(),
-    mail: z.email().optional(),
-    website: z.url().optional(),
-    twitter: z.url().optional(),
-    github: z.url().optional(),
-    linkedin: z.url().optional(),
-    discord: z.url().optional(),
-  }),
-})
-
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+  loader: glob({
+    pattern: "*.md",
+    base: "./src/content/projects",
+  }),
   schema: ({ image }) =>
     z.object({
       name: z.string(),
       description: z.string(),
-      tags: z.array(z.string()),
-      image: image(),
       link: z.url(),
+      tags: z.array(z.string()).optional(),
+      image: image().optional(),
+      startDate: z.coerce.date().optional(),
+      endDate: z.coerce.date().optional(),
+      draft: z.boolean().optional(),
     }),
 })
 
-export const collections = { blog, authors, projects }
+export const collections = { blog, projects }

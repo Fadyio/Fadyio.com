@@ -8,12 +8,17 @@
       "type": "image/webp"
     },
     {
-      "src": "/favicon/Fadyio.webp",
-      "sizes": "192x192",
+      "src": "/favicon/apple-touch-icon.webp",
+      "sizes": "180x180",
       "type": "image/webp"
+    },
+    {
+      "src": "/favicon/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
-  "theme_color": "#121212",
-  "background_color": "#121212",
+  "theme_color": "#181825",
+  "background_color": "#181825",
   "display": "standalone"
 }

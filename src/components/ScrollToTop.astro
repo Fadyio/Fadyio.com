@@ -1,0 +1,54 @@
+---
+import ArrowUp from "@/assets/icons/arrow-up.svg"
+---
+
+<button
+  type="button"
+  data-icon-button
+  data-scroll-top
+  aria-label="Scroll to top"
+>
+  <ArrowUp aria-hidden="true" />
+</button>
+
+<style>
+  button {
+    position: fixed;
+    inset-block-end: var(--space-s);
+    inset-inline-end: var(--space-s);
+    z-index: 10;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--foreground);
+    visibility: hidden;
+    background-color: color-mix(in oklab, var(--surface) 90%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+
+    &[data-visible] {
+      visibility: visible;
+    }
+  }
+</style>
+
+<script>
+  const buttons = [
+    ...document.querySelectorAll<HTMLElement>("[data-scroll-top]"),
+  ]
+
+  const update = () => {
+    const past = scrollY > innerHeight * 0.5
+    for (const button of buttons) button.toggleAttribute("data-visible", past)
+  }
+
+  addEventListener("scroll", update, { passive: true })
+  update()
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target as Element).closest("[data-scroll-top]")) return
+
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" })
+  })
+</script>

@@ -1,0 +1,49 @@
+:root {
+  /* Catppuccin Latte (light) / Catppuccin Mocha (dark).
+     The dark page uses Mantle so Base surfaces stand out like the original. */
+  --gray-1: light-dark(#eff1f5, #181825); /* page: Latte Base / Mocha Mantle */
+  --gray-2: light-dark(#ffffff, #1e1e2e); /* raised surface / code: Mocha Base */
+  --gray-3: light-dark(#e6e9ef, #313244); /* muted surface: Mantle / Surface0 */
+  --gray-6: light-dark(#bcc0cc, #45475a); /* border */
+  --gray-11: light-dark(#5c5f77, #bac2de); /* Subtext1 */
+  --gray-12: light-dark(#4c4f69, #cdd6f4); /* Text */
+
+  --mauve: light-dark(#8839ef, #cba6f7);
+
+  --background: var(--gray-1);
+  --surface: var(--gray-2);
+  --surface-elevated: light-dark(#e6e9ef, #11111b);
+  --foreground: var(--gray-12);
+  --muted: var(--gray-3);
+  --muted-foreground: var(--gray-11);
+  --accent: var(--mauve);
+  --accent-foreground: light-dark(#ffffff, #181825);
+  --border: var(--gray-6);
+  --ring: var(--mauve);
+
+  color-scheme: light dark;
+}
+
+*,
+::before,
+::after,
+::backdrop,
+::file-selector-button {
+  border-color: var(--border);
+
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+}
+
+::selection {
+  color: var(--foreground);
+  background-color: color-mix(in oklab, var(--mauve) 30%, transparent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}

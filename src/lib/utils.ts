@@ -1,22 +1,24 @@
-import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
-export function formatDate(date: Date) {
-  return Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
   }).format(date)
 }
 
-export function readingTime(text: string) {
-  if (!text) return '1 min read'
-  const textOnly = text.replace(/(<[^>]+>|```[\s\S]*?```|[#*_~`>\-\[\]()!|])/g, '')
-  const wordCount = textOnly.split(/\s+/).filter(Boolean).length
-  const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
-  return `${readingTimeMinutes} min read`
+export const normalizePath = (pathname: string) => {
+  let normalized: string
+  try {
+    normalized = decodeURIComponent(pathname)
+  } catch {
+    normalized = pathname
+  }
+
+  normalized = normalized
+    .replace(/\/index\.html$/, "/")
+    .replace(/\.html$/, "")
+    .replace(/\/+$/, "")
+
+  return normalized || "/"
 }

@@ -1,55 +1,164 @@
 ---
-import Link from '@/components/Link.astro'
-import { Badge } from '@/components/ui/badge'
-import { Image } from 'astro:assets'
-import type { CollectionEntry } from 'astro:content'
+import ExternalIcon from "@/assets/icons/external.svg"
+import { formatDate } from "@/lib/utils"
+import { Image } from "astro:assets"
+import type { CollectionEntry } from "astro:content"
 
-type Props = {
-  project: CollectionEntry<'projects'>
-}
+type Props = { project: CollectionEntry<"projects"> }
 
 const { project } = Astro.props
+const { name, description, link, tags, image, startDate, endDate } =
+  project.data
 ---
 
-<div
-  class="not-prose rounded-xl border p-4 transition-colors duration-300 ease-in-out hover:bg-secondary/50"
->
-  <Link
-    href={project.data.link}
-    class="flex flex-col gap-4 sm:flex-row"
-    external
-  >
-    {
-      project.data.image && (
-        <div class="max-w-[200px] sm:flex-shrink-0">
-          <Image
-            src={project.data.image}
-            alt={project.data.name}
-            width={1200}
-            height={630}
-            class="object-cover"
-          />
-        </div>
-      )
-    }
-    <div class="flex-grow">
-      <h3 class="mb-1 text-lg font-semibold">
-        {project.data.name}
-      </h3>
-      <p class="mb-2 text-sm text-muted-foreground">
-        {project.data.description}
-      </p>
-      {
-        project.data.tags && (
-          <div class="flex flex-wrap gap-2">
-            {project.data.tags.map((tag: string) => (
-              <Badge variant="secondary" showHash={false}>
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )
+<li>
+  {image && (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <Image src={image} alt="" width={640} height={336} />
+    </a>
+  )}
+  <entry-info>
+    <h2>
+      <a href={link} target="_blank" rel="noopener noreferrer">{name}</a>
+    </h2>
+    <entry-meta>
+      {startDate && (
+        <project-dates>
+          <time datetime={startDate.toISOString()}>
+            {formatDate(startDate)}
+          </time>
+          {" → "}
+          {endDate ? (
+            <time datetime={endDate.toISOString()}>
+              {formatDate(endDate)}
+            </time>
+          ) : (
+            "Present"
+          )}
+        </project-dates>
+      )}
+      <project-link>
+        <ExternalIcon aria-hidden="true" />
+        {new URL(link).hostname}
+      </project-link>
+    </entry-meta>
+    <p>{description}</p>
+    {tags && tags.length > 0 && (
+      <project-tags>
+        {tags.map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </project-tags>
+    )}
+  </entry-info>
+</li>
+
+<style>
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-s);
+    padding: var(--space-s);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+
+    > a {
+      flex-shrink: 0;
+      inline-size: 14rem;
+
+      :global(img) {
+        inline-size: 100%;
+        block-size: auto;
+        border-radius: var(--radius-lg);
       }
-    </div>
-  </Link>
-</div>
+    }
+
+    entry-info {
+      display: flex;
+      min-inline-size: 0;
+      flex-direction: column;
+
+      > h2 {
+        font-size: var(--step-1);
+        line-height: calc(var(--leading-offset) + 1em);
+        font-weight: var(--font-weight-medium);
+
+        a {
+          color: inherit;
+
+          &:hover {
+            color: var(--accent);
+          }
+        }
+      }
+
+      entry-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-3xs);
+        margin-block-end: var(--space-3xs);
+        font-size: var(--step--1);
+        color: var(--muted-foreground);
+
+        project-dates {
+          display: flex;
+          align-items: center;
+          gap: var(--space-3xs);
+        }
+
+        project-link {
+          display: flex;
+          align-items: center;
+          gap: var(--space-3xs);
+          color: var(--muted-foreground);
+
+          svg {
+            inline-size: 1em;
+            block-size: 1em;
+          }
+        }
+
+        project-dates ~ project-link::before {
+          content: "·";
+          color: var(--muted-foreground);
+        }
+      }
+
+      p {
+        color: var(--muted-foreground);
+      }
+
+      project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3xs);
+        margin-block-start: var(--space-2xs);
+        font-size: var(--step--1);
+
+        span {
+          padding-inline: var(--space-2xs);
+          color: var(--muted-foreground);
+          background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+          border-radius: var(--radius-full);
+        }
+      }
+    }
+
+    @media (width < 40rem) {
+      flex-direction: column;
+
+      > a {
+        inline-size: 100%;
+        max-inline-size: 32rem;
+      }
+    }
+  }
+</style>

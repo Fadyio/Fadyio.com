@@ -1,39 +1,33 @@
-export type Site = {
-  TITLE: string
-  DESCRIPTION: string
-  EMAIL: string
-  NUM_POSTS_ON_HOMEPAGE: number
-  POSTS_PER_PAGE: number
-  SITEURL: string
-}
+import type { SvgComponent } from "astro/types"
+import Email from "@/assets/icons/email.svg"
+import GitHub from "@/assets/icons/github.svg"
+import LinkedIn from "@/assets/icons/linkedin.svg"
+import RSS from "@/assets/icons/rss.svg"
 
-export type Link = {
-  href: string
-  label: string
-}
+export const SITE = {
+  title: "Fady I/O",
+  author: "Fady Nagh",
+  description:
+    "Practical notes and guides about AWS, Kubernetes, Linux, privacy, and cloud-native infrastructure.",
+  locale: "en-US",
+  dir: "ltr",
+  defaultPageImage: "/static/twitter-card.webp",
+  defaultPostImage: "/static/twitter-card.webp",
+} as const
 
-export const SITE: Site = {
-  TITLE: "Fady I/O",
-  DESCRIPTION:
-    "This is my blog. I use it to write about DevOps journey with AWS, K8s, Docker, self-hosting, privacy, and cloud-native experiments.",
-  EMAIL: 'Fady@Fadyio.com',
-  NUM_POSTS_ON_HOMEPAGE: 3,
-  POSTS_PER_PAGE: 8,
-  SITEURL: 'https://fadyio.com',
-}
-
-export const NAV_LINKS: Link[] = [
-  { href: '/blog', label: 'blog' },
-  { href: '/projects', label: 'projects' },
-  { href: '/gpg-key.txt', label: 'PGP Key' },
-  { href: '/authors', label: 'authors' },
+export const NAVIGATION = [
+  { href: "/blog", label: "Blog" },
+  { href: "/projects", label: "Projects" },
+  { href: "/pgp-key", label: "PGP Key" },
 ]
 
-export const SOCIAL_LINKS: Link[] = [
-  { href: 'https://github.com/Fadyio', label: 'GitHub' },
+export const SOCIALS: { href: string; label: string; icon: SvgComponent }[] = [
+  { href: "https://github.com/Fadyio", label: "GitHub", icon: GitHub },
+  { href: "mailto:Fady@Fadyio.com", label: "Email", icon: Email },
   {
-    href: 'Fady@Fadyio.com', label: 'Email'
+    href: "https://linkedin.com/in/Fadyio",
+    label: "LinkedIn",
+    icon: LinkedIn,
   },
-  { href: 'https://linkedin.com/in/Fadyio', label: 'LinkedIn' },
-  { href: '/rss.xml', label: 'RSS' },
+  { href: "/rss.xml", label: "RSS", icon: RSS },
 ]

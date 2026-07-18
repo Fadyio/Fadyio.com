@@ -1,0 +1,84 @@
+---
+import MoonIcon from "@/assets/icons/moon.svg"
+import SunIcon from "@/assets/icons/sun.svg"
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  data-icon-button
+  aria-label="Toggle theme"
+>
+  <light-icon><SunIcon aria-hidden="true" /></light-icon>
+  <dark-icon><MoonIcon aria-hidden="true" /></dark-icon>
+</button>
+
+<style is:global>
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  dark-icon {
+    display: none;
+  }
+
+  :root[data-theme="dark"] {
+    light-icon {
+      display: none;
+    }
+
+    dark-icon {
+      display: inline;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      light-icon {
+        display: none;
+      }
+
+      dark-icon {
+        display: inline;
+      }
+    }
+  }
+</style>
+
+<script>
+  const root = document.documentElement
+  const button = document.getElementById("theme-toggle")
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)")
+
+  const isDark = () =>
+    root.dataset.theme === "dark" ||
+    (!root.dataset.theme && systemTheme.matches)
+
+  const syncThemeUi = () => {
+    const dark = isDark()
+    const label = dark ? "Use light theme" : "Use dark theme"
+    button?.setAttribute("aria-label", label)
+    button?.setAttribute("title", label)
+    document
+      .querySelector<HTMLMetaElement>("[data-theme-color]")
+      ?.setAttribute("content", dark ? "#181825" : "#eff1f5")
+  }
+
+  button?.addEventListener("click", () => {
+    const theme = isDark() ? "light" : "dark"
+    root.dataset.theme = theme
+    try {
+      localStorage.theme = theme
+    } catch {
+      // The selected theme still applies for the current page.
+    }
+    syncThemeUi()
+  })
+
+  systemTheme.addEventListener("change", syncThemeUi)
+  syncThemeUi()
+</script>
