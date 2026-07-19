@@ -37,8 +37,12 @@ import ArrowUp from "@/assets/icons/arrow-up.svg"
     ...document.querySelectorAll<HTMLElement>("[data-scroll-top]"),
   ]
 
+  let isPast: boolean | null = null
+
   const update = () => {
     const past = scrollY > innerHeight * 0.5
+    if (isPast === past) return
+    isPast = past
     for (const button of buttons) button.toggleAttribute("data-visible", past)
   }
 
