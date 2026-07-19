@@ -197,15 +197,7 @@ const fingerprint = "E804 8598 BFE2 9B79 168C 33C5 B32E 4B95 8EAB 3137"
       return
     }
 
-    const textarea = document.createElement("textarea")
-    textarea.value = value
-    textarea.style.position = "fixed"
-    textarea.style.opacity = "0"
-    document.body.append(textarea)
-    textarea.select()
-    const copied = document.execCommand("copy")
-    textarea.remove()
-    if (!copied) throw new Error("Copy command failed")
+    throw new Error("Clipboard API not supported")
   }
 
   button?.addEventListener("click", async () => {
