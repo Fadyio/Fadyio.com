@@ -8,7 +8,7 @@ export const externalLinks = defineHastPlugin({
       const href = node.properties.href
       if (typeof href === "string" && /^https?:\/\//.test(href)) {
         ctx.setProperty(node, "target", "_blank")
-        ctx.setProperty(node, "rel", "noreferrer noopener")
+        ctx.setProperty(node, "rel", "noopener noreferrer")
       }
     },
   },
