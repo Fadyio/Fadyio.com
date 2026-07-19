@@ -11,7 +11,7 @@ const { name, description, link, tags, image, startDate, endDate } =
   project.data
 ---
 
-<li>
+<li class="card">
   {image && (
     <a
       href={link}
@@ -61,25 +61,6 @@ const { name, description, link, tags, image, startDate, endDate } =
 
 <style>
   li {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-s);
-    padding: var(--space-s);
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-
-    > a {
-      flex-shrink: 0;
-      inline-size: 14rem;
-
-      :global(img) {
-        inline-size: 100%;
-        block-size: auto;
-        border-radius: var(--radius-lg);
-      }
-    }
-
     entry-info {
       display: flex;
       min-inline-size: 0;
@@ -149,15 +130,6 @@ const { name, description, link, tags, image, startDate, endDate } =
           background-color: color-mix(in oklab, var(--muted) 50%, transparent);
           border-radius: var(--radius-full);
         }
-      }
-    }
-
-    @media (width < 40rem) {
-      flex-direction: column;
-
-      > a {
-        inline-size: 100%;
-        max-inline-size: 32rem;
       }
     }
   }
