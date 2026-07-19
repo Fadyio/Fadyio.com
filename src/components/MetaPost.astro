@@ -33,8 +33,8 @@ const imageHeight = image?.height ?? 628
 <meta property="og:site_name" content={SITE.title}>
 <meta property="og:locale" content={SITE.locale.replace("-", "_")}>
 <meta property="og:image" content={ogImage}>
-<meta property="og:image:width" content={imageWidth}>
-<meta property="og:image:height" content={imageHeight}>
+<meta property="og:image:width" content={String(imageWidth)}>
+<meta property="og:image:height" content={String(imageHeight)}>
 <meta property="og:image:alt" content={title}>
 
 <meta name="twitter:card" content="summary_large_image">
