@@ -3,6 +3,7 @@ import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import type { ElementContent } from "hast"
 import type {} from "mdast-util-to-hast"
+import { fromHtml } from "hast-util-from-html"
 import { toHtml } from "hast-util-to-html"
 import { h } from "hastscript"
 import { defineMdastPlugin } from "satteri"
@@ -12,11 +13,14 @@ const ICONS_DIR = join(
   "../assets/icons/callouts",
 )
 
-const loadIcon = (name: string) =>
-  readFileSync(join(ICONS_DIR, `${name}.svg`), "utf8")
+const loadIcon = (name: string) => {
+  const svgString = readFileSync(join(ICONS_DIR, `${name}.svg`), "utf8")
     .replace("<svg", '<svg aria-hidden="true"')
     .replace(/\s+/g, " ")
     .trim()
+  return fromHtml(svgString, { space: "svg", fragment: true })
+    .children[0] as ElementContent
+}
 
 const VARIANTS: Record<string, string> = {
   note: "info-circle",
@@ -26,15 +30,12 @@ const VARIANTS: Record<string, string> = {
   important: "bell",
 }
 
-const icons: Record<string, string> = {}
+const icons: Record<string, ElementContent> = {}
 for (const name of [...new Set(Object.values(VARIANTS)), "alt-arrow-down"]) {
   icons[name] = loadIcon(name)
 }
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-
-const raw = (value: string): ElementContent =>
-  ({ type: "raw", value }) as unknown as ElementContent
 
 export const calloutDirective = defineMdastPlugin({
   name: "callout-directive",
@@ -56,11 +57,10 @@ export const calloutDirective = defineMdastPlugin({
 
     const summary = toHtml(
       h("summary", [
-        raw(icons[iconName]),
+        icons[iconName],
         h("span", title),
-        raw(icons["alt-arrow-down"]),
+        icons["alt-arrow-down"],
       ]),
-      { allowDangerousHtml: true },
     )
 
     const closed = !!node.attributes && "closed" in node.attributes

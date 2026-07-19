@@ -24,6 +24,7 @@
     "@expressive-code/plugin-line-numbers": "^0.42.0",
     "astro": "^7.1.1",
     "github-slugger": "^2.0.0",
+    "hast-util-from-html": "^2.0.3",
     "hast-util-select": "^6.0.4",
     "hast-util-to-html": "^9.0.5",
     "hastscript": "^9.0.1",
