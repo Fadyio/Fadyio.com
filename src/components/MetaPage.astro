@@ -2,6 +2,7 @@
 import { SITE } from "@/consts"
 import { pageTitle } from "@/lib/content"
 import { normalizePath } from "@/lib/utils"
+import BaseMeta from "./BaseMeta.astro"
 
 type Props = {
   title?: string
@@ -24,19 +25,9 @@ const ogImage = new URL(SITE.defaultPageImage, base)
 <link rel="canonical" href={canonical}>
 {noindex && <meta name="robots" content="noindex, follow" />}
 
-<meta property="og:title" content={ogTitle}>
-<meta property="og:description" content={description}>
-<meta property="og:url" content={canonical}>
-<meta property="og:type" content="website">
-<meta property="og:site_name" content={SITE.title}>
-<meta property="og:locale" content={SITE.locale.replace("-", "_")}>
-<meta property="og:image" content={ogImage}>
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="628">
-<meta property="og:image:alt" content={ogTitle}>
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content={ogTitle}>
-<meta name="twitter:description" content={description}>
-<meta name="twitter:image" content={ogImage}>
-<meta name="twitter:image:alt" content={ogTitle}>
+<BaseMeta
+  title={ogTitle}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+/>

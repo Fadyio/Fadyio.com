@@ -1,0 +1,40 @@
+---
+import { SITE } from "@/consts"
+
+type Props = {
+  title: string
+  description: string
+  canonical: URL
+  ogImage: URL
+  type?: string
+  imageWidth?: string
+  imageHeight?: string
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  type = "website",
+  imageWidth = "1200",
+  imageHeight = "628",
+} = Astro.props
+---
+
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:type" content={type}>
+<meta property="og:site_name" content={SITE.title}>
+<meta property="og:locale" content={SITE.locale.replace("-", "_")}>
+<meta property="og:image" content={ogImage}>
+<meta property="og:image:width" content={imageWidth}>
+<meta property="og:image:height" content={imageHeight}>
+<meta property="og:image:alt" content={title}>
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={ogImage}>
+<meta name="twitter:image:alt" content={title}>
