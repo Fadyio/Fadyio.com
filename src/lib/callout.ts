@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import type { ElementContent } from "hast"
@@ -12,8 +12,8 @@ const ICONS_DIR = join(
   "../assets/icons/callouts",
 )
 
-const loadIcon = (name: string) =>
-  readFileSync(join(ICONS_DIR, `${name}.svg`), "utf8")
+const loadIcon = async (name: string) =>
+  (await readFile(join(ICONS_DIR, `${name}.svg`), "utf8"))
     .replace("<svg", '<svg aria-hidden="true"')
     .replace(/\s+/g, " ")
     .trim()
@@ -27,9 +27,11 @@ const VARIANTS: Record<string, string> = {
 }
 
 const icons: Record<string, string> = {}
-for (const name of [...new Set(Object.values(VARIANTS)), "alt-arrow-down"]) {
-  icons[name] = loadIcon(name)
-}
+await Promise.all(
+  [...new Set(Object.values(VARIANTS)), "alt-arrow-down"].map(async (name) => {
+    icons[name] = await loadIcon(name)
+  }),
+)
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
