@@ -14,7 +14,8 @@
     "astro": "astro",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "check": "pnpm format:check && astro build"
+    "check": "pnpm format:check && astro build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.3.4",
@@ -36,7 +37,10 @@
     "@biomejs/biome": "^2.5.4",
     "@types/hast": "3.0.5",
     "@types/mdast": "4.0.4",
-    "mdast-util-to-hast": "13.2.1"
+    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/ui": "^4.1.10",
+    "mdast-util-to-hast": "13.2.1",
+    "vitest": "^4.1.10"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
