@@ -3,9 +3,18 @@ import { getCollection, type CollectionEntry } from "astro:content"
 
 export const pageTitle = (title: string) => `${title} | ${SITE.title}`
 
+let _postsCache: Promise<CollectionEntry<"blog">[]> | undefined
+
 export async function getPosts(): Promise<CollectionEntry<"blog">[]> {
-  const posts = await getCollection("blog", ({ data }) => !data.draft)
-  return posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  if (_postsCache) {
+    return _postsCache
+  }
+
+  _postsCache = getCollection("blog", ({ data }) => !data.draft).then((posts) =>
+    posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+  )
+
+  return _postsCache
 }
 
 export async function getTags(): Promise<
