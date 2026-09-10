@@ -18,7 +18,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "^0.3.4",
+    "@astrojs/markdown-satteri": "^0.3.8",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
     "@expressive-code/plugin-collapsible-sections": "^0.42.0",
@@ -42,8 +42,9 @@
   },
   "overrides": {
     "postcss@<=8.5.22": ">=8.5.23",
-    "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1",
+    "js-yaml@>=4.0.0 <4.3.2": ">=4.3.2",
     "nanoid@<3.3.18": ">=3.3.18",
-    "fast-xml-parser@>=5.9.3 <5.10.1": ">=5.10.1"
+    "fast-xml-parser@>=5.9.3 <5.10.1": ">=5.10.1",
+    "smol-toml@<=1.7.0": ">=1.7.1"
   }
 }
