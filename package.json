@@ -30,7 +30,7 @@
     "hastscript": "^9.0.1",
     "satteri": "0.9.5",
     "satteri-expressive-code": "^0.1.8",
-    "sharp": "0.35.3",
+    "sharp": "0.35.4",
     "temml": "^0.13.3"
   },
   "devDependencies": {
